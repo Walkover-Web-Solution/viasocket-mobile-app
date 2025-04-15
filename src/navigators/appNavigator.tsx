@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import ChatBot from 'chatbot-react-native-sdk';
-import PageHtmlRenderer from '../components/pageHtmlRenderer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useAppSelector } from '../hooks/hooks';
-import AllPages from '../screens/allPages';
 import AllFoldersAndFlows from '../screens/allFoldersAndFlows';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SearchOverlay from '../components/searchOverlay';
+import FlowPreview from '../screens/flowPreview';
+import FlowsList from '../screens/allFlows';
+import { useGetChatbotTokenMutation } from '../redux/services/apis/chatbotApis';
 
 const Stack = createStackNavigator();
 
@@ -18,16 +19,26 @@ const AppNavigator = () => {
         currentOrgId: state.userInfo.currentOrgId,
     }));
 
+    const { chatbotToken } = useAppSelector((state) => ({
+        chatbotToken: state.userInfo.chatbotToken,
+    }));
+
+    const [getChatbotToken] = useGetChatbotTokenMutation()
+    useEffect(() => {
+        if (!chatbotToken) {
+            getChatbotToken()
+        }
+    }, [chatbotToken]);
     return (
         <View style={{ flex: 1 }}>
             <Stack.Navigator>
                 <Stack.Screen name="FlowsAndFoldersList" component={AllFoldersAndFlows} options={{ headerShown: false }} />
-                <Stack.Screen name="PageList" component={AllPages} options={{ headerShown: true }} />
-                <Stack.Screen name="PageDetail" component={PageHtmlRenderer} options={{ headerShown: true }} />
+                <Stack.Screen name="FlowList" component={FlowsList} options={{ headerShown: true }} />
+                <Stack.Screen name="FlowPreview" component={FlowPreview} options={{ headerShown: true }} />
             </Stack.Navigator>
 
-            <ChatBot
-                embedToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdfaWQiOiI1OTgyIiwiY2hhdGJvdF9pZCI6IjY2NTQ3OWE4YmQ1MDQxYWU5M2ZjZDNjNSIsInVzZXJfaWQiOiIxMjQifQ.aI4h6OmkVvQP5dyiSNdtKpA4Z1TVNdlKjAe5D8XCrew"
+            {chatbotToken && <ChatBot
+                embedToken={chatbotToken}
                 threadId={currentOrgId}
                 bridgeName="techdoc_internal_chatbot"
                 variables={{}}
@@ -35,7 +46,7 @@ const AppNavigator = () => {
                 hideIcon={false}
                 defaultOpen={false}
                 hideCloseButton={false}
-            />
+            />}
 
             <TouchableOpacity
                 style={styles.floatingButton}

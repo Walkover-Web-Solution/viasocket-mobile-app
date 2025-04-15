@@ -11,7 +11,6 @@ export const userApi = createApi({
         getUser: builder.query<User, void>({
             query: () => '/orgs/user-org/details',
             transformResponse: (response: { data: any }) => {
-                console.log('response', response);
                 const data = response.data.data[0]
                 return {
                     name: data.name,
@@ -24,7 +23,7 @@ export const userApi = createApi({
                             name: item?.meta?.companyName || item.name || ''
                         }
                     }),
-                    proxyAuthToken: 'T1dXd05lQTk5RlBBbTlXOWZsYkN0TmtFajQzMzQzV0NGZ1hSeGVSZ1ZXSUtZd21GR3E5WUhiTmowZ1haaEJjTmsxR3JhdkE0ZnNFaWF6YzR3aXh4eVptYTRNaWp6dlVVODdmRmlGQkNSWmpwUHcrNmlHRUVQa2dJeStJRWZXZjRIMis5WG01bllGZUFTRzVCT3BsRE9lSmJ3cEgrTUZtV044OHNIMXZ4NjlZPQ=='
+                    proxyAuthToken: 'ZVBqVDZOVmxaeFN0TG5jZkh0ZnIwNlpTWmVyNjRMNm54UlN3cmY4SXFyd1d6Y0dFaEswRXVEckR4Rm93NUNxMWtOZURXbFdGYmhDWnZnR3VZRW1SV1l4aWN3Yy9KVUdhUGNmUVlHR1AwVnNQbm1ONnAvQkRMbFI1MXc1ZHZzdUdMcjArczJQZGFFdVEyZUlxbmtLSEZEZFZlR3g5eExXWVpUWStPMkFOU2l3PQ=='
                 }
             },
 

@@ -11,4 +11,5 @@ export interface $UserInfoReducerType extends User {
     currentOrgData: Record<string, unknown>
     currentPageId: string
     currentCollectionId: string
+    chatbotToken: string
 }

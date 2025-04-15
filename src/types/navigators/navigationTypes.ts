@@ -1,6 +1,6 @@
 // navigation/types.ts
 export type RootStackParamList = {
     FlowsAndFoldersList: undefined;
-    PageDetail: { pageId: string };
-    PageList: { collectionId: string };
+    FlowPreview: { flowId: string };
+    FlowList: { projectId: string };
 };

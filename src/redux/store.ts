@@ -3,9 +3,9 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistStore } from 'redux-persist';
 import { userApi } from './services/apis/userApi';
 import persistedReducer from './rootReducers';
-import { collectionsApi } from './services/apis/collectionsApi';
+import { FlowApi } from './services/apis/flowApi';
 import { pagesApi } from './services/apis/pagesApi';
-
+import { chatbotApi } from './services/apis/chatbotApis';
 export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
@@ -13,8 +13,9 @@ export const store = configureStore({
             serializableCheck: false, // ✅ prevents function warnings
         }).concat(
             userApi.middleware,
-            collectionsApi.middleware,
-            pagesApi.middleware
+            FlowApi.middleware,
+            pagesApi.middleware,
+            chatbotApi.middleware
         ),
 });
 

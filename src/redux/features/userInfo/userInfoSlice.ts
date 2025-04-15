@@ -11,7 +11,8 @@ const initialState: $UserInfoReducerType = {
     currentOrgData: {},
     currentPageId: "",
     currentCollectionId: "",
-    orgs: []
+    orgs: [],
+    chatbotToken: ''
 };
 
 const userSlice = createSlice({

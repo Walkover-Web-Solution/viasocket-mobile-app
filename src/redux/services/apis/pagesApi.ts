@@ -13,7 +13,6 @@ export const pagesApi = createApi({
                 body: { pageIds: [pageId] }
             }),
             transformResponse: (response: { data: any }) => {
-                console.log(Object.values(response.docs)[0])
                 return Object.values(response.docs)[0]
             }
         }),

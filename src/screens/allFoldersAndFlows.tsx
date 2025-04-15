@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl, FlatList } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
-import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { useNavigation } from '@react-navigation/native';
+import { useGetFlowsAndFoldersQuery } from '../redux/services/apis/flowApi';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 function AllFoldersAndFlows() {
     const { currentOrgData, currentOrgId } = useAppSelector((state) => ({
@@ -12,28 +13,39 @@ function AllFoldersAndFlows() {
     }));
     const dispatch = useAppDispatch();
     const navigation = useNavigation();
-    const { data, error, isLoading, isFetching, refetch } = useGetAllCollectionsQuery(currentOrgId);
+    const { data, error, isLoading, isFetching, refetch } = useGetFlowsAndFoldersQuery(currentOrgId);
 
-    const switchOrg = useCallback(() => {
+    const handleSwitchOrganization = useCallback(() => {
         dispatch(setUserInfo({ currentOrgId: null }));
     }, [dispatch]);
 
-    const navigateToAllPages = useCallback(
-        (collectionId: string) => {
-            if (collectionId) {
-                navigation.navigate('PageList', { collectionId });
+    const handleNavigateToFlowList = useCallback(
+        (projectId: string) => {
+            if (projectId) {
+                navigation.navigate('FlowList', { projectId });
             }
         },
-        [dispatch, navigation]
+        [navigation]
     );
 
-    const renderLoading = () => (
+    const handleNavigateToFlowPreview = useCallback(
+        (flowId: string) => {
+            if (flowId) {
+                navigation.navigate('FlowPreview', { flowId });
+            }
+        },
+        [navigation]
+    );
+
+    const rootLevelFlows = data?.flows?.filter((flow) => flow.project_id === `proj${currentOrgId}`);
+
+    const renderLoadingIndicator = () => (
         <View style={styles.centeredContainer}>
             <Text style={styles.loadingText}>Loading...</Text>
         </View>
     );
 
-    const renderError = () => (
+    const renderErrorMessage = () => (
         <View style={styles.errorContainer}>
             <Text style={styles.errorText}>
                 We encountered an issue. Please restart the app and try again.
@@ -41,9 +53,9 @@ function AllFoldersAndFlows() {
         </View>
     );
 
-    const renderOrgHeader = () => (
+    const renderOrganizationHeader = () => (
         <View style={styles.orgHeader}>
-            <TouchableOpacity onPress={switchOrg} style={styles.orgButton}>
+            <TouchableOpacity onPress={handleSwitchOrganization} style={styles.orgButton}>
                 <Text style={styles.orgButtonText}>
                     {currentOrgData?.name
                         ?.split(' ')
@@ -56,29 +68,46 @@ function AllFoldersAndFlows() {
         </View>
     );
 
-    const renderCollections = () => (
+    const renderFlowAndFolderCollections = () => (
         <ScrollView style={{ flex: 1 }} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
-            {renderOrgHeader()}
+            {renderOrganizationHeader()}
             <View style={{ padding: 16 }}>
-                {data?.steps?.root?.map((collectionId: string) => {
-                    const collection = data?.collectionJson[collectionId];
-                    return (
-                        <TouchableOpacity
-                            key={collectionId}
-                            style={styles.card}
-                            onPress={() => navigateToAllPages(collectionId)}
-                        >
-                            <Text style={styles.collectionTitle}>{collection.name}</Text>
+                <Text style={styles.sectionHeading}>Flows</Text>
+                <FlatList
+                    data={rootLevelFlows}
+                    keyExtractor={(item) => item.id}
+                    scrollEnabled={false}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity style={styles.card} onPress={() => handleNavigateToFlowPreview(item.id)}>
+                            <Text style={styles.collectionTitle}>{item.title || 'Untitled Flow'}</Text>
                         </TouchableOpacity>
-                    );
-                })}
+                    )}
+                    ListEmptyComponent={<Text style={styles.emptyText}>No flows found.</Text>}
+                />
+
+                <Text style={styles.sectionHeading}>Folders</Text>
+                <FlatList
+                    data={data?.projects}
+                    keyExtractor={(item) => item.id}
+                    scrollEnabled={false}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity style={styles.card} onPress={() => handleNavigateToFlowList(item.id)}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Icon name="folder" size={20} color="#000" style={{ marginRight: 8 }} />
+                                <Text style={styles.collectionTitle}>{item.title || 'Untitled Flow'}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    )}
+                    ListEmptyComponent={<Text style={styles.emptyText}>No folders found.</Text>}
+                />
             </View>
         </ScrollView>
     );
 
+
     return (
         <View style={{ flex: 1 }}>
-            {isLoading ? renderLoading() : error ? renderError() : renderCollections()}
+            {isLoading ? renderLoadingIndicator() : error ? renderErrorMessage() : renderFlowAndFolderCollections()}
         </View>
     );
 }
@@ -146,6 +175,24 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
     },
+    sectionHeading: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#222',
+        marginBottom: 10,
+        marginTop: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+        paddingBottom: 4,
+    },
+    emptyText: {
+        fontSize: 14,
+        color: '#888',
+        fontStyle: 'italic',
+        textAlign: 'center',
+        marginTop: 20,
+    },
+
 });
 
 export default AllFoldersAndFlows;

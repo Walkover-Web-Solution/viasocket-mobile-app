@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Dimensions, Keyboard } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
+import { useGetFlowsAndFoldersQuery } from '../redux/services/apis/flowApi';
 import { useAppSelector } from '../hooks/hooks';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -12,46 +13,38 @@ const SearchOverlay = ({ onClose }: { onClose: () => void }) => {
     const { currentOrgId } = useAppSelector((state) => ({
         currentOrgId: state.userInfo.currentOrgId,
     }));
-    const { data, error, isLoading } = useGetAllCollectionsQuery(currentOrgId);
+    const { data, error, isLoading } = useGetFlowsAndFoldersQuery(currentOrgId);
 
     const navigation = useNavigation();
 
-    const getAllItems = (keys: string[]): any[] => {
-        return keys.reduce((acc: any[], key: string) => {
-            const items = data?.steps?.[key] ?? [];
-            return [...acc, ...items, ...getAllItems(items)];
-        }, []);
-    };
-
-    const dataToSearchIn = getAllItems(data?.steps?.root ?? []).map((pageId: string) => data?.pagesJson?.[pageId]);
-
-    const filteredData = dataToSearchIn
+    const filteredData = data?.flows
         .filter((item) =>
-            item?.name?.toLowerCase().includes(query?.toLowerCase())
+            item?.title?.toLowerCase().includes(query?.toLowerCase())
         );
 
 
-    const renderItem = ({ item }: { item: { name: string, id: string, collectionId: string } | undefined }) => {
-        const getParentNames = (id: string | null): string => {
-            if (!id) return '';
-            const parent = data?.pagesJson?.[id];
-            if (!parent) return '';
-            return parent.parentId ? `${getParentNames(parent.parentId)}> ${parent.name}  ` : '';
-        };
-        const collectionName = data?.collectionJson?.[item?.collectionId]?.name ?? '';
-        const parentNames = getParentNames(item?.id ?? '');
-
+    const renderItem = ({ item }: { item: { title: string, id: string, project_id: string } | undefined }) => {
+        const isRootLevelFlow = item?.project_id === `proj${currentOrgId}`
+        let projectName = null
+        if (!isRootLevelFlow) {
+            projectName = data?.projects?.find((project) => project?.id === item?.project_id)?.title
+        }
         const handlePress = () => {
             if (item?.id) {
-                navigation.navigate('PageDetail', { pageId: item.id });
+                navigation.navigate('FlowPreview', { flowId: item.id });
                 onClose();
             }
         };
 
         return (
             <TouchableOpacity style={styles.card} onPress={handlePress}>
-                <Text style={styles.cardTitle}>{item?.name}</Text>
-                {collectionName ? <Text style={styles.cardSubtitle}>{collectionName} {parentNames}</Text> : null}
+                <Text style={styles.cardTitle}>{item?.title || 'Untitled Flow'}</Text>
+                {isRootLevelFlow ? null :
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Icon name="folder" size={18} color="#777" style={{ marginRight: 4 }} />
+                        <Text style={styles.cardSubtitle}>{projectName}</Text>
+                    </View>
+                }
             </TouchableOpacity>
         );
     };
@@ -64,7 +57,7 @@ const SearchOverlay = ({ onClose }: { onClose: () => void }) => {
                 </TouchableOpacity>
                 <TextInput
                     style={styles.input}
-                    placeholder="Search Page"
+                    placeholder="Search Flows"
                     placeholderTextColor="#999"
                     value={query}
                     onChangeText={setQuery}
