@@ -6,12 +6,13 @@ import { setUserInfo } from '../../features/userInfo/userInfoSlice';
 
 export const userApi = createApi({
     reducerPath: 'userApi',
-    baseQuery: customFetchBaseQuery('https://routes.msg91.com/api/c'),
+    baseQuery: customFetchBaseQuery('https://flow-api.viasocket.com'),
     endpoints: (builder) => ({
         getUser: builder.query<User, void>({
-            query: () => '/getDetails',
+            query: () => '/orgs/user-org/details',
             transformResponse: (response: { data: any }) => {
-                const data = response.data[0]
+                console.log('response', response);
+                const data = response.data.data[0]
                 return {
                     name: data.name,
                     id: data.id,
@@ -23,7 +24,7 @@ export const userApi = createApi({
                             name: item?.meta?.companyName || item.name || ''
                         }
                     }),
-                    proxyAuthToken: 'dEt0WnNYdVUzQmNsd1hJRUtmdzczNWdmMHB2NlhjU1AvdVBUN21peTFrWkxJd1FQUTZCNmZaTC91L2o0RFRJRXJEbjV6SmlWNnNPVTJQRTRiVGNWWER5VEFCMm54NkxGa0pMenRFVVd1N3hWdm5HaW51c1Vvc0tHVWpLMzU0QXYzVzNCYi9SeitYMEVES1R2N3h5UkhaMncvdHY0T3RORHZadlZOV0pEdnA4PQ=='
+                    proxyAuthToken: 'T1dXd05lQTk5RlBBbTlXOWZsYkN0TmtFajQzMzQzV0NGZ1hSeGVSZ1ZXSUtZd21GR3E5WUhiTmowZ1haaEJjTmsxR3JhdkE0ZnNFaWF6YzR3aXh4eVptYTRNaWp6dlVVODdmRmlGQkNSWmpwUHcrNmlHRUVQa2dJeStJRWZXZjRIMis5WG01bllGZUFTRzVCT3BsRE9lSmJ3cEgrTUZtV044OHNIMXZ4NjlZPQ=='
                 }
             },
 
@@ -37,7 +38,17 @@ export const userApi = createApi({
                 }
             },
         }),
+        switchOrg: builder.mutation<void, string>({
+            query: (orgId) => ({
+                url: `/orgs/switchOrg`,
+                method: 'POST',
+                body: {
+                    id: orgId,
+                    name: orgId
+                }
+            }),
+        }),
     }),
 });
 
-export const { useGetUserQuery, useLazyGetUserQuery } = userApi;
+export const { useGetUserQuery, useLazyGetUserQuery, useSwitchOrgMutation } = userApi;

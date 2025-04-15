@@ -5,7 +5,7 @@ import PageHtmlRenderer from '../components/pageHtmlRenderer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useAppSelector } from '../hooks/hooks';
 import AllPages from '../screens/allPages';
-import AllCollections from '../screens/allCollection';
+import AllFoldersAndFlows from '../screens/allFoldersAndFlows';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SearchOverlay from '../components/searchOverlay';
 
@@ -21,7 +21,7 @@ const AppNavigator = () => {
     return (
         <View style={{ flex: 1 }}>
             <Stack.Navigator>
-                <Stack.Screen name="CollectionsList" component={AllCollections} options={{ headerShown: false }} />
+                <Stack.Screen name="FlowsAndFoldersList" component={AllFoldersAndFlows} options={{ headerShown: false }} />
                 <Stack.Screen name="PageList" component={AllPages} options={{ headerShown: true }} />
                 <Stack.Screen name="PageDetail" component={PageHtmlRenderer} options={{ headerShown: true }} />
             </Stack.Navigator>

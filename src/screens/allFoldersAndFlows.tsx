@@ -5,7 +5,7 @@ import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { useNavigation } from '@react-navigation/native';
 
-function AllCollections() {
+function AllFoldersAndFlows() {
     const { currentOrgData, currentOrgId } = useAppSelector((state) => ({
         currentOrgId: state.userInfo.currentOrgId,
         currentOrgData: state.userInfo.currentOrgData,
@@ -148,4 +148,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AllCollections;
+export default AllFoldersAndFlows;

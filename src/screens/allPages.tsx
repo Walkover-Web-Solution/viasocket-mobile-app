@@ -9,7 +9,7 @@ import { RootStackParamList } from '../types/navigators/navigationTypes';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PageList'>;
 
-function CollectionsList({ route, navigation }: Props) {
+function FlowsAndFoldersList({ route, navigation }: Props) {
     const { collectionId } = route.params;
     const { currentOrgId } = useAppSelector((state) => ({
         currentOrgId: state.userInfo.currentOrgId,
@@ -139,4 +139,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CollectionsList;
+export default FlowsAndFoldersList;

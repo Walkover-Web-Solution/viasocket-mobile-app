@@ -1,7 +1,7 @@
 import React from 'react'
 import { RefreshControl, ScrollView, View } from 'react-native'
 import { StyleSheet } from 'react-native';
-import { useGetUserQuery } from '../redux/services/apis/userApi';
+import { useGetUserQuery, useSwitchOrgMutation } from '../redux/services/apis/userApi';
 import { useAppDispatch } from '../hooks/hooks';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { TouchableOpacity, Text } from 'react-native';
@@ -11,9 +11,10 @@ export default function AllWorkspace() {
 
     const dispatch = useAppDispatch();
     const { data, isLoading, isFetching, refetch } = useGetUserQuery();
-
+    const [switchOrg] = useSwitchOrgMutation();
     const handleOrgSelect = (org: any) => {
         dispatch(setUserInfo({ currentOrgId: org?.id, currentOrgData: org }));
+        switchOrg(org?.id);
     };
 
     if (isLoading) {
