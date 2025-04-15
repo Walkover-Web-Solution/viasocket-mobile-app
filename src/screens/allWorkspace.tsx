@@ -1,17 +1,14 @@
-import React from 'react'
-import { RefreshControl, ScrollView, View } from 'react-native'
-import { StyleSheet } from 'react-native';
+import React from 'react';
+import { FlatList, RefreshControl, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useGetUserQuery, useSwitchOrgMutation } from '../redux/services/apis/userApi';
 import { useAppDispatch } from '../hooks/hooks';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
-import { TouchableOpacity, Text } from 'react-native';
-import { ActivityIndicator } from 'react-native';
 
 export default function AllWorkspace() {
-
     const dispatch = useAppDispatch();
     const { data, isLoading, isFetching, refetch } = useGetUserQuery();
     const [switchOrg] = useSwitchOrgMutation();
+
     const handleOrgSelect = (org: any) => {
         dispatch(setUserInfo({ currentOrgId: org?.id, currentOrgData: org }));
         switchOrg(org?.id);
@@ -26,16 +23,19 @@ export default function AllWorkspace() {
     }
 
     return (
-        <View style={styles.container}>
-            <ScrollView refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
-                {data?.orgs?.map((org) => (
-                    <TouchableOpacity key={org.id} style={styles.card} onPress={() => handleOrgSelect(org)}>
-                        <Text style={styles.orgName}>{org.name}</Text>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
-        </View>
-    )
+        <FlatList
+            contentContainerStyle={styles.container}
+            data={data?.orgs || []}
+            keyExtractor={(item) => item.id}
+            refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
+            renderItem={({ item }) => (
+                <TouchableOpacity style={styles.card} onPress={() => handleOrgSelect(item)}>
+                    <Text style={styles.orgName}>{item.name}</Text>
+                </TouchableOpacity>
+            )}
+            ListEmptyComponent={<Text style={styles.emptyText}>No workspaces found.</Text>}
+        />
+    );
 }
 
 
@@ -72,5 +72,12 @@ const styles = StyleSheet.create({
         marginTop: 4,
         fontSize: 12,
         color: '#666'
-    }
+    },
+    emptyText: {
+        fontSize: 16,
+        color: '#999',
+        textAlign: 'center',
+        marginTop: 20,
+    },
+
 });
