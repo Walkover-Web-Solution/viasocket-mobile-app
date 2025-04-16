@@ -80,10 +80,14 @@ function AllFoldersAndFlows() {
                     renderItem={({ item }) => (
                         <TouchableOpacity style={styles.card} onPress={() => handleNavigateToFlowPreview(item.id)}>
                             <Text style={styles.collectionTitle}>{item.title || 'Untitled Flow'}</Text>
+                            {item.description ? (
+                                <Text style={styles.collectionDescription}>{item.description}</Text>
+                            ) : null}
                         </TouchableOpacity>
                     )}
                     ListEmptyComponent={<Text style={styles.emptyText}>No flows found.</Text>}
                 />
+
 
                 <Text style={styles.sectionHeading}>Folders</Text>
                 <FlatList
@@ -99,6 +103,7 @@ function AllFoldersAndFlows() {
                         </TouchableOpacity>
                     )}
                     ListEmptyComponent={<Text style={styles.emptyText}>No folders found.</Text>}
+                    contentContainerStyle={{ paddingBottom: 80 }}
                 />
             </View>
         </ScrollView>
@@ -118,6 +123,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    collectionDescription: {
+        fontSize: 13,
+        color: '#666',
+        marginTop: 4,
+    },
+
     loadingText: {
         fontSize: 18,
         color: '#555',
@@ -176,9 +187,8 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
     },
     sectionHeading: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#222',
+        fontSize: 20, fontWeight: '500', marginBottom: 10, color: '#222',
+
         marginBottom: 10,
         marginTop: 10,
         borderBottomWidth: 1,
@@ -188,7 +198,6 @@ const styles = StyleSheet.create({
     emptyText: {
         fontSize: 14,
         color: '#888',
-        fontStyle: 'italic',
         textAlign: 'center',
         marginTop: 20,
     },

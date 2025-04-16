@@ -54,6 +54,9 @@ function FlowList({ route, navigation }: FlowListProps) {
                     onPress={() => handleFlowPress(item.id)}
                 >
                     <Text style={styles.flowTitle}>{item.title || 'Untitled'}</Text>
+                    {item.description ? (
+                        <Text style={styles.flowDescription}>{item.description}</Text>
+                    ) : null}
                 </TouchableOpacity>
             )}
             ListEmptyComponent={<Text style={styles.emptyText}>No flows available.</Text>}
@@ -73,6 +76,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    flowDescription: {
+        fontSize: 13,
+        color: '#666',
+        marginTop: 4,
+    },
     loadingText: {
         fontSize: 18,
         color: '#555',
@@ -89,6 +97,7 @@ const styles = StyleSheet.create({
     },
     flowContainer: {
         padding: 16,
+        paddingBottom: 80,
     },
     flowTitle: {
         fontSize: 16,

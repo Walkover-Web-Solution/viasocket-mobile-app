@@ -24,7 +24,8 @@ export default function AllWorkspace() {
 
     return (
         <FlatList
-            contentContainerStyle={styles.container}
+            style={styles.list} // Added style to ensure scrolling works
+            contentContainerStyle={[styles.container, { paddingBottom: 80 }]} // Added bottom padding for breathing space
             data={data?.orgs || []}
             keyExtractor={(item) => item.id}
             refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
@@ -38,15 +39,16 @@ export default function AllWorkspace() {
     );
 }
 
-
 const styles = StyleSheet.create({
     loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     },
+    list: {
+        flex: 1, // Ensures the FlatList takes up the full available space for scrolling
+    },
     container: {
-        flex: 1,
         padding: 16,
         backgroundColor: '#f5f5f5'
     },
@@ -79,5 +81,4 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 20,
     },
-
 });
