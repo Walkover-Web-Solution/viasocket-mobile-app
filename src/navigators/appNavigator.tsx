@@ -29,6 +29,7 @@ const AppNavigator = () => {
             getChatbotToken()
         }
     }, [chatbotToken]);
+
     return (
         <View style={{ flex: 1 }}>
             <Stack.Navigator>
@@ -39,9 +40,11 @@ const AppNavigator = () => {
 
             {chatbotToken && <ChatBot
                 embedToken={chatbotToken}
-                threadId={currentOrgId}
-                bridgeName="techdoc_internal_chatbot"
-                variables={{}}
+                threadId={String(currentOrgId)}
+                bridgeName="flowbyai-reactchatbot"
+                variables={{
+                    orgId: currentOrgId,
+                }}
                 openInContainer={false}
                 hideIcon={false}
                 defaultOpen={false}

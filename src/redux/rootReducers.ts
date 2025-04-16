@@ -9,7 +9,7 @@ import { chatbotApi } from './services/apis/chatbotApis';
 const persistConfig = {
     key: 'root',
     storage: mmkvStorage,
-    whitelist: ['userInfo']
+    whitelist: ['userInfo', 'userApi', 'FlowApi']
 };
 
 const rootReducer = combineReducers({

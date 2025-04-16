@@ -11,7 +11,6 @@ export const FlowApi = createApi({
         GetFlowsAndFolders: builder.query<{ flows: Array<{ id: string; identifier: string; project_id: string; status: number; title: string; updatedAt: string, description: string }>, projects: Array<{ id: string; title: string }> }, string>({
             query: (orgId: string) => `/orgs/${orgId}/projects?type=flow`,
             transformResponse: (response: any) => {
-                console.log(response.data.flows)
                 const filteredFlows = response.data.flows.map((flow: any) => {
                     return {
                         id: flow?.id,

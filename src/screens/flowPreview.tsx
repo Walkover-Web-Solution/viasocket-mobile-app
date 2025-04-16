@@ -1,11 +1,12 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
     View,
     ScrollView,
     Text,
     useWindowDimensions,
     TouchableOpacity,
-    RefreshControl
+    RefreshControl,
+    DeviceEventEmitter
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import RenderHTML from 'react-native-render-html';
@@ -19,15 +20,66 @@ type Props = NativeStackScreenProps<RootStackParamList, 'FlowPreview'>;
 
 function FlowPreview({ route, navigation }: Props) {
     const { flowId } = route.params;
-    const { currentOrgId } = useAppSelector((state) => ({
+    const { currentOrgId, proxy_auth_token } = useAppSelector((state) => ({
         currentOrgId: state.userInfo.currentOrgId,
+        proxy_auth_token: state.userInfo.proxyAuthToken
     }));
 
     const { data: flowsAndFolders } = useGetFlowsAndFoldersQuery(currentOrgId);
     const { data: aiFlowJson, error, isLoading, isFetching, refetch } = useGetAiFlowJsonQuery(flowId);
-    const flowName = flowsAndFolders?.flows?.find((flow) => flow.id === flowId)?.title || 'No page selected';
-    const flowDescription = flowsAndFolders?.flows?.find((flow) => flow.id === flowId)?.description || '';
-    console.log(aiFlowJson, error)
+    const selectedFlow = flowsAndFolders?.flows?.find((flow) => flow.id === flowId) || {};
+    const flowName = selectedFlow.title || 'No page selected';
+    const flowDescription = selectedFlow.description || '';
+    const projectId = selectedFlow.project_id || '';
+
+    useEffect(() => {
+        DeviceEventEmitter.emit('SendDataToChatbot', {
+            type: 'SendDataToChatbot',
+            data: {
+                variables: {
+                    orgId: currentOrgId,
+                    scriptId: flowId,
+                    "variables": {
+                        "env": "prod",
+                        "proxy_auth_token": proxy_auth_token,
+                        "orgId": currentOrgId,
+                        "projectId": projectId || `proj${currentOrgId}`,
+                        "scriptId": flowId
+                    },
+                    "context": {
+                        "req": {
+                            "body": {}
+                        },
+                        "res": {},
+                        "vals": {}
+                    }
+                },
+                threadId: projectId,
+                subThreadId: flowId
+            }
+        });
+
+        return () => {
+            DeviceEventEmitter.emit('SendDataToChatbot', {
+                type: 'SendDataToChatbot',
+                data: {
+                    variables: {
+                        orgId: currentOrgId,
+                        scriptId: null,
+                        "variables": {
+                            "env": "prod",
+                            "proxy_auth_token": proxy_auth_token,
+                            "orgId": currentOrgId,
+                            "projectId": null,
+                            "scriptId": null
+                        },
+                    },
+                    threadId: currentOrgId,
+                }
+            });
+        };
+    }, [currentOrgId]);
+
     useLayoutEffect(() => {
         navigation.setOptions({
             title: flowName
