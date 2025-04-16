@@ -1,20 +1,15 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, { useEffect, useLayoutEffect } from 'react';
 import {
-    View,
+    DeviceEventEmitter,
+    RefreshControl,
     ScrollView,
     Text,
-    useWindowDimensions,
-    TouchableOpacity,
-    RefreshControl,
-    DeviceEventEmitter
+    View
 } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import RenderHTML from 'react-native-render-html';
 import { useAppSelector } from '../hooks/hooks';
-import { useGetPageHtmlQuery } from '../redux/services/apis/pagesApi';
-import { RootStackParamList } from '../types/navigators/navigationTypes';
-import { Menu, IconButton } from 'react-native-paper';
 import { useGetAiFlowJsonQuery, useGetFlowsAndFoldersQuery } from '../redux/services/apis/flowApi';
+import { RootStackParamList } from '../types/navigators/navigationTypes';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FlowPreview'>;
 
@@ -28,7 +23,7 @@ function FlowPreview({ route, navigation }: Props) {
     const { data: flowsAndFolders } = useGetFlowsAndFoldersQuery(currentOrgId);
     const { data: aiFlowJson, error, isLoading, isFetching, refetch } = useGetAiFlowJsonQuery(flowId);
     const selectedFlow = flowsAndFolders?.flows?.find((flow) => flow.id === flowId) || {};
-    const flowName = selectedFlow.title || 'No page selected';
+    const flowName = selectedFlow.title || 'Untitled Flow';
     const flowDescription = selectedFlow.description || '';
     const projectId = selectedFlow.project_id || '';
 

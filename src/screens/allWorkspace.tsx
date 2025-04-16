@@ -1,8 +1,8 @@
 import React from 'react';
-import { FlatList, RefreshControl, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { useGetUserQuery, useSwitchOrgMutation } from '../redux/services/apis/userApi';
+import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAppDispatch } from '../hooks/hooks';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
+import { useGetUserQuery, useSwitchOrgMutation } from '../redux/services/apis/userApi';
 
 export default function AllWorkspace() {
     const dispatch = useAppDispatch();

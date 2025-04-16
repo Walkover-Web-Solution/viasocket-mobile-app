@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Dimensions, Keyboard } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useGetFlowsAndFoldersQuery } from '../redux/services/apis/flowApi';
-import { useAppSelector } from '../hooks/hooks';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React, { useState } from 'react';
+import { Dimensions, FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { default as Icon, default as MaterialIcons } from 'react-native-vector-icons/MaterialIcons';
+import { useAppSelector } from '../hooks/hooks';
+import { useGetFlowsAndFoldersQuery } from '../redux/services/apis/flowApi';
 
 const { width, height } = Dimensions.get('window');
 
