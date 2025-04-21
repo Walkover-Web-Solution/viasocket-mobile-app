@@ -26,7 +26,6 @@ function FlowPreview({ route, navigation }: Props) {
     const flowName = selectedFlow.title || 'Untitled Flow';
     const flowDescription = selectedFlow.description || '';
     const projectId = selectedFlow.project_id || '';
-
     useEffect(() => {
         DeviceEventEmitter.emit('SendDataToChatbot', {
             type: 'SendDataToChatbot',

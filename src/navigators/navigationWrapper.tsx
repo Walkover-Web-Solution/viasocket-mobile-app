@@ -1,17 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useAppSelector } from '../hooks/hooks';
 import AuthNavigator from './authNavigator';
 import AppNavigator from './appNavigator';
+import { store } from '../redux/store';
+import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 
 const NavigationWrapper = () => {
-    const userInfo = useAppSelector((state) => state.userInfo);
-    const token = userInfo?.proxyAuthToken;
-    const currentOrgId = userInfo?.currentOrgId;
-    const isAuthenticated = token && currentOrgId;
+    const {
+        proxyAuthToken,
+        currentOrgId
+    } = useAppSelector((state) =>({
+        proxyAuthToken: state.userInfo.proxyAuthToken,
+        currentOrgId: state.userInfo.currentOrgId
+    }));
+
     return (
         <NavigationContainer>
-            {isAuthenticated ? <AppNavigator /> : <AuthNavigator />}
+            {proxyAuthToken && currentOrgId ? <AppNavigator /> : <AuthNavigator />}
         </NavigationContainer>
     );
 };

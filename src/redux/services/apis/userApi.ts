@@ -23,7 +23,7 @@ export const userApi = createApi({
                             name: item?.meta?.companyName || item.name || ''
                         }
                     }),
-                    proxyAuthToken: 'dDlFaWFNTWF0cVNHcC9KSzVBMmMvZzlQaHlmZDVXeTZmaHNnekZScHRiQkpMMTNEQjg1QkordVJjVFFZalRSditCdnRGRDdPekFKMDduaWlGL2g0eiszb1puNEJ0dXNOdlFPUytOdkhyT3dOTXF6cytqY2FQTEdNTDFDWkt1T04ybURCV1N3eFpBdThqK2lveUhuZFpVb0poQkJCTXBublpuMXNZdGpEM0RVPQ=='
+                    proxyAuthToken: 'V1ZVZmg5VnJrZVByVWdYVlVpcUllUUxuUG9uU3BTNFhNNSt6ZG1tVDdML1RYY0Jna2w0ejdPRVYvajJlTXp5Wk1pODJuZzJVbkRNcFJ2aEk3VGR0Wkw5OEhPZnYwU3lEMG1xeW9LbnN0eGRNNEFBcU12OWc3anpwYVlHTmJqRldqelZSRzlxTm1vTGF5N0l1L3NUK3NjbElWYU5YajlmYUJxemljcVl3ZEVNPQ=='
                 }
             },
 
@@ -35,7 +35,7 @@ export const userApi = createApi({
                 } catch (err) {
                     console.error('Failed to fetch user info:', err);
                 }
-            },
+            }
         }),
         switchOrg: builder.mutation<void, string>({
             query: (orgId) => ({

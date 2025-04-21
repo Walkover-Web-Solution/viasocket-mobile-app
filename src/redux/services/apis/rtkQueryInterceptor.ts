@@ -3,6 +3,8 @@ import axios from 'axios';
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { $ReduxCoreType } from '../../../types/redux/reduxCore';
+import { store } from '../../store';
+import { setUserInfo } from '../../features/userInfo/userInfoSlice';
 
 export const customFetchBaseQuery = (
     baseUrl: string
@@ -12,11 +14,10 @@ export const customFetchBaseQuery = (
         prepareHeaders: (headers, { getState }) => {
             const state = getState() as $ReduxCoreType;
             const token = state.userInfo.proxyAuthToken
-
+            // console.log(token,"token")
             // if (token) {
-            headers.set('Proxy_auth_token', 'dDlFaWFNTWF0cVNHcC9KSzVBMmMvZzlQaHlmZDVXeTZmaHNnekZScHRiQkpMMTNEQjg1QkordVJjVFFZalRSditCdnRGRDdPekFKMDduaWlGL2g0eiszb1puNEJ0dXNOdlFPUytOdkhyT3dOTXF6cytqY2FQTEdNTDFDWkt1T04ybURCV1N3eFpBdThqK2lveUhuZFpVb0poQkJCTXBublpuMXNZdGpEM0RVPQ==');
-            headers.set('proxy_auth_token', 'dDlFaWFNTWF0cVNHcC9KSzVBMmMvZzlQaHlmZDVXeTZmaHNnekZScHRiQkpMMTNEQjg1QkordVJjVFFZalRSditCdnRGRDdPekFKMDduaWlGL2g0eiszb1puNEJ0dXNOdlFPUytOdkhyT3dOTXF6cytqY2FQTEdNTDFDWkt1T04ybURCV1N3eFpBdThqK2lveUhuZFpVb0poQkJCTXBublpuMXNZdGpEM0RVPQ==');
-            // headers.set('techdoc_auth', 'S1craVkrQkxYOWVseXFTTWF6R1VVejJuS2o4V3BaSGxuaVIveFo1bWF1ZlQ2eUhLa1JWKzE1VWcvY1V3UERsODgwcklSaDNJUHlYZFhyTW53b2Fka3lkN3VSelZOYVltZVBKZHZ2TkN0NXRzMXZ1UURocHBQZXA2N3k2QXZraFp4MjNTcldpTXJXTmhROGh2c0tmL29WS0FGTEpzQXp2Q2ZDYU9BeElvcmhZPQ==');
+                headers.set('Proxy_auth_token', 'V1ZVZmg5VnJrZVByVWdYVlVpcUllUUxuUG9uU3BTNFhNNSt6ZG1tVDdML1RYY0Jna2w0ejdPRVYvajJlTXp5Wk1pODJuZzJVbkRNcFJ2aEk3VGR0Wkw5OEhPZnYwU3lEMG1xeW9LbnN0eGRNNEFBcU12OWc3anpwYVlHTmJqRldqelZSRzlxTm1vTGF5N0l1L3NUK3NjbElWYU5YajlmYUJxemljcVl3ZEVNPQ==');
+                // headers.set('proxy_auth_token', 'V1ZVZmg5VnJrZVByVWdYVlVpcUllUUxuUG9uU3BTNFhNNSt6ZG1tVDdML1RYY0Jna2w0ejdPRVYvajJlTXp5Wk1pODJuZzJVbkRNcFJ2aEk3VGR0Wkw5OEhPZnYwU3lEMG1xeW9LbnN0eGRNNEFBcU12OWc3anpwYVlHTmJqRldqelZSRzlxTm1vTGF5N0l1L3NUK3NjbElWYU5YajlmYUJxemljcVl3ZEVNPQ==');
             // }
 
             return headers;
@@ -24,6 +25,14 @@ export const customFetchBaseQuery = (
     });
 
     return async (args, api, extraOptions) => {
-        return baseQuery(args, api, extraOptions);
+        const result = await baseQuery(args, api, extraOptions);
+        if(result.error){
+            console.log(result.error,"ERROR")
+        }
+        if (result.error && result.error.status === 401) {
+            store.dispatch(setUserInfo({ proxyAuthToken: null, currentOrgId: null }));
+        }
+
+        return result;
     };
 };
