@@ -4,6 +4,7 @@ import { Dimensions, FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableO
 import { default as Icon, default as MaterialIcons } from 'react-native-vector-icons/MaterialIcons';
 import { useAppSelector } from '../hooks/hooks';
 import { useGetFlowsAndFoldersQuery } from '../redux/services/apis/flowApi';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get('window');
 
@@ -49,7 +50,7 @@ const SearchOverlay = ({ onClose }: { onClose: () => void }) => {
     };
 
     return (
-        <View style={styles.overlay}>
+        <SafeAreaView style={styles.overlay}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={onClose}>
                     <MaterialIcons name="arrow-back" size={28} color="#333" />
@@ -87,7 +88,7 @@ const SearchOverlay = ({ onClose }: { onClose: () => void }) => {
                     onScrollBeginDrag={Keyboard.dismiss}
                 />
             )}
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -102,7 +103,6 @@ const styles = StyleSheet.create({
         height,
         backgroundColor: '#fff',
         zIndex: 10,
-        paddingTop: 20,
         paddingHorizontal: 16,
     },
     header: {

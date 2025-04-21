@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { useGetFlowsAndFoldersQuery } from '../redux/services/apis/flowApi';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 function AllFoldersAndFlows() {
     const { currentOrgData, currentOrgId } = useAppSelector((state) => ({
@@ -111,9 +112,9 @@ function AllFoldersAndFlows() {
 
 
     return (
-        <View style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
             {isLoading ? renderLoadingIndicator() : error ? renderErrorMessage() : renderFlowAndFolderCollections()}
-        </View>
+        </SafeAreaView>
     );
 }
 

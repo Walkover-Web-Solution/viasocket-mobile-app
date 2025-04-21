@@ -34,8 +34,8 @@ const AppNavigator = () => {
         <View style={{ flex: 1 }}>
             <Stack.Navigator>
                 <Stack.Screen name="FlowsAndFoldersList" component={AllFoldersAndFlows} options={{ headerShown: false }} />
-                <Stack.Screen name="FlowList" component={FlowsList} options={{ headerShown: true }} />
-                <Stack.Screen name="FlowPreview" component={FlowPreview} options={{ headerShown: true }} />
+                <Stack.Screen name="FlowList" component={FlowsList} options={{ headerShown: true , headerBackTitle:''}} />
+                <Stack.Screen name="FlowPreview" component={FlowPreview} options={{ headerShown: true ,headerBackTitle:''}} />
             </Stack.Navigator>
 
             {chatbotToken && <ChatBot

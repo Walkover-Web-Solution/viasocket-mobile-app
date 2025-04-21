@@ -12,7 +12,7 @@ const AuthNavigator = () => {
     }));
 
     return (
-        <Stack.Navigator screenOptions={{ headerShown: true }}>
+        <Stack.Navigator>
             {!token ? (
                 <Stack.Screen name="Login" component={LoginScreen} />
             ) : !currentOrgId ? (
