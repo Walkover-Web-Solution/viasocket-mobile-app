@@ -22,8 +22,7 @@ export const userApi = createApi({
                             companyId: item?.meta?.companyId || '',
                             name: item?.meta?.companyName || item.name || ''
                         }
-                    }),
-                    proxyAuthToken: 'V1ZVZmg5VnJrZVByVWdYVlVpcUllUUxuUG9uU3BTNFhNNSt6ZG1tVDdML1RYY0Jna2w0ejdPRVYvajJlTXp5Wk1pODJuZzJVbkRNcFJ2aEk3VGR0Wkw5OEhPZnYwU3lEMG1xeW9LbnN0eGRNNEFBcU12OWc3anpwYVlHTmJqRldqelZSRzlxTm1vTGF5N0l1L3NUK3NjbElWYU5YajlmYUJxemljcVl3ZEVNPQ=='
+                    })
                 }
             },
 
