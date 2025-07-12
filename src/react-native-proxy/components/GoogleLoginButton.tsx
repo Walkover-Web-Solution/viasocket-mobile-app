@@ -43,7 +43,6 @@ const GoogleLoginButton = ({
             const listOfFeatures = await FeatureApis.getFeatureList(referenceId)
             const googleFeature = listOfFeatures.find((feature: any) => feature.text === 'Continue with Google');
             const webClientId = googleFeature?.urlLink?.split('client_id=')[1]?.split('&')[0];
-            console.log(listOfFeatures, "-0-0-0-0-0")
             configureGoogleSignIn(config || { webClientId, offlineAccess: true });
             setLoading(true);
             const googleLoginResult: any = await login('google');

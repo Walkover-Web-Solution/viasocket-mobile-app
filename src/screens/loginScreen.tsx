@@ -1,7 +1,7 @@
 // LoginScreen.tsx
 import React from 'react';
 import { View } from 'react-native';
-import { ShowGoogleLoginButton } from '../react-native-proxy'
+import { ShowGoogleLoginButton } from 'react-native-proxy'
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { store } from '../redux/store';
 
