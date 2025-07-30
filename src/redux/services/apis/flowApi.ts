@@ -7,7 +7,7 @@ export const FlowApi = createApi({
     baseQuery: customFetchBaseQuery('https://flow-api.viasocket.com'),
     endpoints: (builder) => ({
         GetFlowsAndFolders: builder.query<{ flows: Array<{ id: string; identifier: string; project_id: string; status: number; title: string; updatedAt: string, description: string }>, projects: Array<{ id: string; title: string }> }, string>({
-            query: (orgId: string) => `/orgs/${orgId}/projects?type=flow`,
+            query: (orgId: string) => `/orgs/${orgId}/projects?type=flow&bringflows=true`,
             transformResponse: (response: any) => {
                 response.data.projects = response?.data?.projects?.filter((project: any) => project !== null && project?.status != 0);
                 const validProjectIds = response?.data?.projects?.map((project: any) => project.id);

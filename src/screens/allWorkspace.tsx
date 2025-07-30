@@ -1,7 +1,7 @@
 import React from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View, Button } from 'react-native';
 import { useAppDispatch } from '../hooks/hooks';
-import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
+import { setUserInfo, clearUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { useGetUserQuery, useSwitchOrgMutation } from '../redux/services/apis/userApi';
 
 export default function AllWorkspace() {
@@ -12,6 +12,10 @@ export default function AllWorkspace() {
     const handleOrgSelect = (org: any) => {
         dispatch(setUserInfo({ currentOrgId: org?.id, currentOrgData: org }));
         switchOrg(org?.id);
+    };
+
+    const handleLogout = () => {
+        dispatch(clearUserInfo({}));
     };
 
     if (isLoading) {
@@ -35,6 +39,9 @@ export default function AllWorkspace() {
                 </TouchableOpacity>
             )}
             ListEmptyComponent={<Text style={styles.emptyText}>No workspaces found.</Text>}
+            ListFooterComponent={
+                <Button title="Log Out" onPress={handleLogout} />
+            }
         />
     );
 }
