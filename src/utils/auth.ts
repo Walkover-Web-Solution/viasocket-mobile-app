@@ -1,6 +1,7 @@
 // src/utils/auth.ts
 import { storage } from './storage/mmkv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 // Storage keys
 const TOKEN_KEY = 'auth_token';
@@ -121,5 +122,41 @@ export const clearAuthData = async (): Promise<void> => {
   } catch (error) {
     console.error('Error clearing auth data:', error);
     throw error;
+  }
+};
+
+/**
+ * Exchange OTP JWT token for proxy auth token from MSG91 API
+ */
+export const getProxyAuthTokenFromAPI = async (otpToken: string, email: string): Promise<string | null> => {
+  try {
+    const response = await axios.get('https://routes.msg91.com/api/c/getAuthToken', {
+      headers: {
+        'user_id': email,
+        'Authorization': `Bearer ${otpToken}`
+      }
+    });
+    
+    console.log('Proxy auth token API response:', response.data);
+    
+    // Check if user is registered (based on response structure)
+    if (response.data?.status === 'success' && response.data?.data?.proxy_auth_token) {
+      const proxyToken = response.data.data.proxy_auth_token;
+      
+      // Save proxy auth token and email
+      await Promise.all([
+        saveProxyAuthToken(proxyToken),
+        saveUserEmail(email)
+      ]);
+      
+      return proxyToken;
+    } else {
+      // User is not registered
+      console.log('User not registered on web');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error getting proxy auth token from API:', error);
+    return null;
   }
 };

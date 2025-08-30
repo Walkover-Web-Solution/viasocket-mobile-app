@@ -27,7 +27,6 @@
     "react-native-gesture-handler": "^2.25.0",
     "react-native-mmkv": "^3.2.0",
     "react-native-paper": "^5.13.1",
-    "react-native-proxy": "^0.1.23",
     "react-native-quick-crypto": "^0.7.15",
     "react-native-reanimated": "^3.16.7",
     "react-native-render-html": "^6.3.4",
