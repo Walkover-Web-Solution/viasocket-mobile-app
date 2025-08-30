@@ -17,7 +17,7 @@ function AllFoldersAndFlows() {
     const { data, error, isLoading, isFetching, refetch } = useGetFlowsAndFoldersQuery(currentOrgId);
 
     const handleSwitchOrganization = useCallback(() => {
-        dispatch(setUserInfo({ currentOrgId: null }));
+        dispatch(setUserInfo({ currentOrgId: undefined }));
     }, [dispatch]);
 
     const handleNavigateToFlowList = useCallback(
@@ -188,10 +188,11 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
     },
     sectionHeading: {
-        fontSize: 20, fontWeight: '500', marginBottom: 10, color: '#222',
-
+        fontSize: 20,
+        fontWeight: '500',
         marginBottom: 10,
         marginTop: 10,
+        color: '#222',
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
         paddingBottom: 4,

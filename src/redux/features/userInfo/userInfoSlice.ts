@@ -19,13 +19,13 @@ const userSlice = createSlice({
     name: 'userInfo',
     initialState,
     reducers: {
-        setUserInfo: (state, action: PayloadAction<User>) => {
+        setUserInfo: (state, action: PayloadAction<Partial<$UserInfoReducerType>>) => {
             return {
                 ...state,
                 ...action.payload
             };
         },
-        clearUserInfo: () => ({}),
+        clearUserInfo: () => initialState,
     },
 });
 

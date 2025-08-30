@@ -2,6 +2,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBaseQuery } from './rtkQueryInterceptor';
 
+// Define the API response structure
+interface PageApiResponse {
+    docs: Record<string, { html: string }>;
+}
+
 export const pagesApi = createApi({
     reducerPath: 'pagesApi',
     baseQuery: customFetchBaseQuery('https://doc-rtc-369544787296.asia-south1.run.app/content/4343'),
@@ -12,8 +17,9 @@ export const pagesApi = createApi({
                 method: 'POST',
                 body: { pageIds: [pageId] }
             }),
-            transformResponse: (response: { data: any }) => {
-                return Object.values(response.docs)[0]
+            transformResponse: (response: PageApiResponse): { html: string } => {
+                const firstDoc = Object.values(response.docs)[0];
+                return firstDoc || { html: '' }; // Provide fallback
             }
         }),
     }),
