@@ -6,15 +6,18 @@ export const FlowApi = createApi({
     reducerPath: 'FlowApi',
     baseQuery: customFetchBaseQuery('https://flow-api.viasocket.com'),
     endpoints: (builder) => ({
-        GetFlowsAndFolders: builder.query<{ flows: Array<{ id: string; identifier: string; project_id: string; status: number; title: string; updatedAt: string, description: string }>, projects: Array<{ id: string; title: string }> }, string>({
-            query: (orgId: string) => `/orgs/${orgId}/projects?type=flow`,
+        GetFlowsAndFolders: builder.query<{ flows: Array<{ id: string; identifier: string; project_id: string; status: number; title: string; updatedAt: string, description: string }>, projects: Array<{ id: string; title: string }> }, { orgId: string }>({
+            query: ({ orgId }) => `/orgs/${orgId}/flows`,
             transformResponse: (response: any) => {
-                response.data.projects = response?.data?.projects?.filter((project: any) => project !== null && project?.status != 0);
-                const validProjectIds = response?.data?.projects?.map((project: any) => project.id);
-                const orgId = response?.data?.flows[0]?.org_id || response?.data?.projects[0]?.org_id;
+               
+                
+                // /flows endpoint only returns flows, not projects
+                const projects: Array<{ id: string; title: string }> = []; // Empty projects array since this endpoint doesn't provide projects
+                
+                // Filter and transform flows
                 const filteredFlows = response?.data?.flows
-                    .filter((flow: any) => {
-                        return flow !== null && flow?.status != 0 && (flow?.project_id == `proj${orgId}` || validProjectIds.includes(flow?.project_id))
+                    ?.filter((flow: any) => {
+                        return flow !== null && flow?.status != 0
                     })
                     .map((flow: any) => ({
                         id: flow.id,
@@ -24,9 +27,27 @@ export const FlowApi = createApi({
                         title: flow.title,
                         updatedAt: flow.updatedAt,
                         description: flow.metadata?.description,
-                    }));
-                response.data.flows = filteredFlows;
-                return response.data;
+                    })) || [];
+                
+                return {
+                    flows: filteredFlows,
+                    projects: projects
+                };
+            },
+        }),
+        GetProjects: builder.query<Array<{ id: string; title: string }>, string>({
+            query: (orgId: string) => `/orgs/${orgId}/projects?type=flow`,
+            transformResponse: (response: any) => {
+              
+                // Filter and transform projects/folders
+                const projects = response?.data?.projects
+                    ?.filter((project: any) => project !== null && project?.status != 0)
+                    .map((project: any) => ({
+                        id: project.id,
+                        title: project.title,
+                    })) || [];
+                
+                return projects;
             },
         }),
         GetAiFlowJson: builder.query<{
@@ -62,4 +83,4 @@ export const FlowApi = createApi({
     }),
 });
 
-export const { useGetFlowsAndFoldersQuery, useGetAiFlowJsonQuery } = FlowApi;
+export const { useGetFlowsAndFoldersQuery, useGetProjectsQuery, useGetAiFlowJsonQuery } = FlowApi;

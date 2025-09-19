@@ -13,15 +13,20 @@ const SearchOverlay = ({ onClose }: { onClose: () => void }) => {
     const { currentOrgId } = useAppSelector((state) => ({
         currentOrgId: state.userInfo.currentOrgId,
     }));
-    const { data, error, isLoading } = useGetFlowsAndFoldersQuery(currentOrgId);
+    const { data, error, isLoading } = useGetFlowsAndFoldersQuery(
+        { orgId: currentOrgId as string }, 
+        { 
+            skip: !currentOrgId,
+            refetchOnMountOrArgChange: true
+        }
+    );
 
     const navigation = useNavigation();
 
     const filteredData = data?.flows
-        .filter((item) =>
+        ?.filter((item) =>
             item?.title?.toLowerCase().includes(query?.toLowerCase())
-        );
-
+        ) || [];
 
     const renderItem = ({ item }: { item: { title: string, id: string, project_id: string } | undefined }) => {
         const isRootLevelFlow = item?.project_id === `proj${currentOrgId}`

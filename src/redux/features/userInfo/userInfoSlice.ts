@@ -8,7 +8,7 @@ const initialState: $UserInfoReducerType = {
     name: '',
     proxyAuthToken: '',
     currentOrgId: '',
-    currentOrgData: {},
+    currentOrgData: null,
     currentPageId: "",
     currentCollectionId: "",
     orgs: [],

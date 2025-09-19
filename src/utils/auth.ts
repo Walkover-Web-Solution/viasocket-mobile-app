@@ -61,9 +61,9 @@ export const getToken = async (): Promise<string | null> => {
     // Try MMKV first, then AsyncStorage
     let token = storage.getString(TOKEN_KEY);
     if (!token) {
-      token = await AsyncStorage.getItem(TOKEN_KEY);
+      token = (await AsyncStorage.getItem(TOKEN_KEY)) || undefined;
     }
-    return token;
+    return token || null;
   } catch (error) {
     console.error('Error getting token:', error);
     return null;
@@ -78,9 +78,9 @@ export const getProxyAuthToken = async (): Promise<string | null> => {
     // Try MMKV first, then AsyncStorage
     let token = storage.getString(PROXY_AUTH_TOKEN_KEY);
     if (!token) {
-      token = await AsyncStorage.getItem(PROXY_AUTH_TOKEN_KEY);
+      token = (await AsyncStorage.getItem(PROXY_AUTH_TOKEN_KEY)) || undefined;
     }
-    return token;
+    return token || null;
   } catch (error) {
     console.error('Error getting proxy auth token:', error);
     return null;
@@ -95,9 +95,9 @@ export const getUserEmail = async (): Promise<string | null> => {
     // Try MMKV first, then AsyncStorage
     let email = storage.getString(USER_EMAIL_KEY);
     if (!email) {
-      email = await AsyncStorage.getItem(USER_EMAIL_KEY);
+      email = (await AsyncStorage.getItem(USER_EMAIL_KEY)) || undefined;
     }
-    return email;
+    return email || null;
   } catch (error) {
     console.error('Error getting user email:', error);
     return null;

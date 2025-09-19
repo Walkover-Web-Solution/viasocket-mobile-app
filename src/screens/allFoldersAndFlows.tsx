@@ -1,24 +1,68 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
-import { useGetFlowsAndFoldersQuery } from '../redux/services/apis/flowApi';
+import { useGetFlowsAndFoldersQuery, useGetProjectsQuery } from '../redux/services/apis/flowApi';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { StackNavigationProp } from '@react-navigation/stack';
+import type { AppStackParamList } from '../navigators/appNavigator';
 
 function AllFoldersAndFlows() {
+    const [allFlows, setAllFlows] = useState<any[]>([]);
+    const [showAllFlows, setShowAllFlows] = useState(false);
+    const [showAllFolders, setShowAllFolders] = useState(false);
+    const FLOWS_LIMIT = 5;
+    const FOLDERS_LIMIT = 5;
+
+    const [flowsOffset, setFlowsOffset] = useState(0);
+    const [hasMoreFlows, setHasMoreFlows] = useState(true);
+
+    const [foldersOffset, setFoldersOffset] = useState(0);
+    const [hasMoreFolders, setHasMoreFolders] = useState(true);
+
     const { currentOrgData, currentOrgId } = useAppSelector((state) => ({
         currentOrgId: state.userInfo.currentOrgId,
         currentOrgData: state.userInfo.currentOrgData,
     }));
     const dispatch = useAppDispatch();
-    const navigation = useNavigation();
-    const { data, error, isLoading, isFetching, refetch } = useGetFlowsAndFoldersQuery(currentOrgId);
-
+    const navigation = useNavigation<StackNavigationProp<AppStackParamList>>();
+    
+    const { data: flowsData, error: flowsError, isLoading: flowsIsLoading, isFetching: flowsIsFetching, refetch: flowsRefetch } = useGetFlowsAndFoldersQuery(
+        { orgId: currentOrgId as string }, 
+        { 
+            skip: !currentOrgId,
+            refetchOnMountOrArgChange: true
+        }
+    );
+    
+    const { data: projectsData, error: projectsError, isLoading: projectsIsLoading, isFetching: projectsIsFetching, refetch: projectsRefetch } = useGetProjectsQuery(currentOrgId as string, { skip: !currentOrgId });
+    
     const handleSwitchOrganization = useCallback(() => {
         dispatch(setUserInfo({ currentOrgId: undefined }));
     }, [dispatch]);
+
+    const handleRefresh = useCallback(() => {
+        setShowAllFlows(false);
+        setShowAllFolders(false);
+        setFlowsOffset(0);
+        setFoldersOffset(0);
+        flowsRefetch();
+        projectsRefetch();
+    }, [flowsRefetch, projectsRefetch]);
+
+    const handleLoadMoreFlows = useCallback(() => {
+        if (hasMoreFlows && !flowsIsFetching) {
+            setFlowsOffset(prev => prev + FLOWS_LIMIT);
+        }
+    }, [hasMoreFlows, flowsIsFetching, FLOWS_LIMIT]);
+
+    const handleLoadMoreFolders = useCallback(() => {
+        if (hasMoreFolders && !projectsIsFetching) {
+            setFoldersOffset(prev => prev + FOLDERS_LIMIT);
+        }
+    }, [hasMoreFolders, projectsIsFetching, FOLDERS_LIMIT]);
 
     const handleNavigateToFlowList = useCallback(
         (projectId: string) => {
@@ -38,7 +82,39 @@ function AllFoldersAndFlows() {
         [navigation]
     );
 
-    const rootLevelFlows = data?.flows?.filter((flow) => flow.project_id === `proj${currentOrgId}`);
+    const handleToggleShowAllFlows = useCallback(() => {
+        setShowAllFlows(prev => !prev);
+    }, []);
+
+    const handleToggleShowAllFolders = useCallback(() => {
+        setShowAllFolders(prev => !prev);
+    }, []);
+
+    // Handle flows data updates - simplified approach
+    useEffect(() => {
+        if (flowsData?.flows) {
+            const validProjectIds = projectsData?.map((p) => p.id) ?? [];
+            const rootLevelFlows = flowsData.flows.filter((flow) => !validProjectIds.includes(flow.project_id));
+            
+            // Remove duplicates by creating a Set of unique IDs
+            const uniqueFlows = rootLevelFlows.filter((flow, index, self) => 
+                index === self.findIndex(f => f.id === flow.id)
+            );
+            
+            console.log('Setting flows:', uniqueFlows.length);
+            setAllFlows(uniqueFlows);
+        }
+    }, [flowsData, projectsData]);
+
+    // Reset showAllFlows when flows data changes (e.g., after refresh)
+    useEffect(() => {
+        if (flowsData?.flows && !flowsIsFetching) {
+            setShowAllFlows(false);
+        }
+    }, [flowsData, flowsIsFetching]);
+
+    const displayFlows = showAllFlows ? allFlows : allFlows.slice(0, FLOWS_LIMIT);
+    const displayFolders = showAllFolders ? projectsData : projectsData?.slice(0, FOLDERS_LIMIT);
 
     const renderLoadingIndicator = () => (
         <View style={styles.centeredContainer}>
@@ -58,11 +134,13 @@ function AllFoldersAndFlows() {
         <View style={styles.orgHeader}>
             <TouchableOpacity onPress={handleSwitchOrganization} style={styles.orgButton}>
                 <Text style={styles.orgButtonText}>
-                    {currentOrgData?.name
-                        ?.split(' ')
-                        .map((word: string) => word[0])
+                    {(currentOrgData?.name ?? '')
+                        .trim()
+                        .split(/\s+/)
+                        .filter(Boolean)
+                        .map((word) => word[0])
                         .join('')
-                        .toUpperCase()}
+                        .toUpperCase() || '?'}
                 </Text>
             </TouchableOpacity>
             <Text style={styles.orgNameText}>{currentOrgData?.name}</Text>
@@ -70,12 +148,12 @@ function AllFoldersAndFlows() {
     );
 
     const renderFlowAndFolderCollections = () => (
-        <ScrollView style={{ flex: 1 }} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
+        <ScrollView style={{ flex: 1 }} refreshControl={<RefreshControl refreshing={flowsIsFetching || projectsIsFetching} onRefresh={handleRefresh} />}>
             {renderOrganizationHeader()}
             <View style={{ padding: 16 }}>
                 <Text style={styles.sectionHeading}>Flows</Text>
                 <FlatList
-                    data={rootLevelFlows}
+                    data={displayFlows}
                     keyExtractor={(item) => item.id}
                     scrollEnabled={false}
                     renderItem={({ item }) => (
@@ -88,11 +166,21 @@ function AllFoldersAndFlows() {
                     )}
                     ListEmptyComponent={<Text style={styles.emptyText}>No flows found.</Text>}
                 />
+                {!showAllFlows && allFlows.length > 5 && (
+                    <TouchableOpacity style={styles.loadMoreLink} onPress={handleToggleShowAllFlows}>
+                        <Text style={styles.loadMoreLinkText}>Load More</Text>
+                    </TouchableOpacity>
+                )}
+                {showAllFlows && (
+                    <TouchableOpacity style={styles.loadMoreLink} onPress={handleToggleShowAllFlows}>
+                        <Text style={styles.loadMoreLinkText}>Show Less</Text>
+                    </TouchableOpacity>
+                )}
 
 
                 <Text style={styles.sectionHeading}>Folders</Text>
                 <FlatList
-                    data={data?.projects}
+                    data={displayFolders}
                     keyExtractor={(item) => item.id}
                     scrollEnabled={false}
                     renderItem={({ item }) => (
@@ -104,16 +192,25 @@ function AllFoldersAndFlows() {
                         </TouchableOpacity>
                     )}
                     ListEmptyComponent={<Text style={styles.emptyText}>No folders found.</Text>}
-                    contentContainerStyle={{ paddingBottom: 80 }}
+                    contentContainerStyle={{ paddingBottom: 10 }}
                 />
+                {!showAllFolders && (projectsData?.length ?? 0) > 5 && (
+                    <TouchableOpacity style={styles.loadMoreLink} onPress={handleToggleShowAllFolders}>
+                        <Text style={styles.loadMoreLinkText}>Load More</Text>
+                    </TouchableOpacity>
+                )}
+                {showAllFolders && (
+                    <TouchableOpacity style={styles.loadMoreLink} onPress={handleToggleShowAllFolders}>
+                        <Text style={styles.loadMoreLinkText}>Show Less</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         </ScrollView>
     );
 
-
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            {isLoading ? renderLoadingIndicator() : error ? renderErrorMessage() : renderFlowAndFolderCollections()}
+            {(flowsIsLoading || projectsIsLoading) ? renderLoadingIndicator() : (flowsError || projectsError) ? renderErrorMessage() : renderFlowAndFolderCollections()}
         </SafeAreaView>
     );
 }
@@ -203,7 +300,16 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 20,
     },
-
+    loadMoreLink: {
+        padding: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    loadMoreLinkText: {
+        fontSize: 16,
+        color: '#007acc',
+    },
 });
 
 export default AllFoldersAndFlows;

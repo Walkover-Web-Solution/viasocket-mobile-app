@@ -159,11 +159,32 @@ export default function AllWorkspace() {
                 data={data?.orgs || []}
                 keyExtractor={(item) => item.id}
                 refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
-                renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.card} onPress={() => handleOrgSelect(item)}>
-                        <Text style={styles.orgName}>{item.name}</Text>
-                    </TouchableOpacity>
-                )}
+                renderItem={({ item }) => {
+                    // Get initials from all words in the name
+                    const getInitials = (name: string) => {
+                        
+                        return name
+                            .split(' ')
+                            .map(word => word[0])
+                            .join('')
+                            .toUpperCase()
+                            .substring(0, 2); // Take first 2 letters max
+                    };
+                    
+                    return (
+                        <TouchableOpacity 
+                            style={styles.card} 
+                            onPress={() => handleOrgSelect(item)}
+                        >
+                            <View style={styles.workspaceIcon}>
+                                <Text style={styles.workspaceIconText}>
+                                    {getInitials(item.name)}
+                                </Text>
+                            </View>
+                            <Text style={styles.orgName}>{item.name}</Text>
+                        </TouchableOpacity>
+                    );
+                }}
                 ListEmptyComponent={<Text style={styles.emptyText}>No workspaces found.</Text>}
             />
             
@@ -283,6 +304,22 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    workspaceIcon: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: '#3B82F6', // Slightly darker sky blue
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 16,
+    },
+    workspaceIconText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     orgName: {
         fontSize: 18,

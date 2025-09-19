@@ -7,9 +7,11 @@ import {
     StyleSheet,
     Alert,
     ActivityIndicator,
-    SafeAreaView,
     AppState,
+    Platform,
+    StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import { useGetUserProfileQuery, useGetMSG91UserProfileQuery, useUpdateUserMutation } from '../redux/services/apis/userApi';
@@ -54,7 +56,7 @@ const EditProfile = () => {
     useEffect(() => {
         // Priority 1: MSG91 API data (has mobile number)
         if (msg91ProfileData) {
-            console.log('🔄 MSG91 profile data loaded:', msg91ProfileData);
+            console.log(' MSG91 profile data loaded:', msg91ProfileData);
             setName(msg91ProfileData.name || '');
             setEmail(msg91ProfileData.email || '');
             setMobile(msg91ProfileData.mobile || '');
@@ -85,7 +87,7 @@ const EditProfile = () => {
     useEffect(() => {
         const handleAppStateChange = (nextAppState: string) => {
             if (nextAppState === 'active') {
-                console.log('🔄 App came to foreground - refreshing profile data');
+                console.log(' App came to foreground - refreshing profile data');
                 refetch();
                 refetchMSG91();
             }
@@ -126,7 +128,7 @@ const EditProfile = () => {
                 ]
             );
         } catch (error: any) {
-            console.error('❌ Error updating profile:', error);
+            console.error(' Error updating profile:', error);
             
             // Parse API error messages
             let errorMessage = 'Failed to update profile. Please try again.';
@@ -170,21 +172,29 @@ const EditProfile = () => {
     // Loading state while fetching profile data
     if (profileLoading || msg91Loading) {
         return (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
+                <StatusBar 
+                    barStyle="dark-content" 
+                    backgroundColor="#fff"
+                />
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color="#007AFF" />
                     <Text style={styles.loadingText}>Loading your profile...</Text>
                 </View>
-            </SafeAreaView>
+            </View>
         );
     }
 
     // Error state if profile data fails to load
     if (profileError) {
         return (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
+                <StatusBar 
+                    barStyle="dark-content" 
+                    backgroundColor="#fff"
+                />
                 <View style={styles.errorContainer}>
-                    <Text style={styles.errorText}>❌ Could not load profile data</Text>
+                    <Text style={styles.errorText}> Could not load profile data</Text>
                     <Text style={styles.errorSubText}>Please check your connection and try again</Text>
                     <TouchableOpacity 
                         style={styles.retryButton}
@@ -193,45 +203,26 @@ const EditProfile = () => {
                         <Text style={styles.retryButtonText}>Go Back</Text>
                     </TouchableOpacity>
                 </View>
-            </SafeAreaView>
+            </View>
         );
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+            <StatusBar 
+                barStyle="dark-content" 
+                backgroundColor="#fff"
+            />
             <View style={styles.header}>
                 <TouchableOpacity 
                     style={styles.backButton}
-                    activeOpacity={0.7}
-                    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-                    onPress={() => {
-                        // Check if we can go back in navigation stack
-                        if (navigation.canGoBack()) {
-                            navigation.goBack();
-                        } else {
-                            navigation.navigate('Select Workspace');
-                        }
-                    }}
+                    onPress={() => navigation.canGoBack() ? navigation.goBack() : navigation.navigate('Select Workspace')}
                 >
                     <Text style={styles.backButtonText}>←</Text>
                 </TouchableOpacity>
                 <Text style={styles.title}>Edit Profile</Text>
-                <TouchableOpacity 
-                    style={styles.refreshButton}
-                    activeOpacity={0.7}
-                    hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
-                    onPress={() => {
-                        refetch();
-                        refetchMSG91();
-                    }}
-                    disabled={profileLoading || msg91Loading || isUpdating}
-                >
-                    <Text style={[styles.refreshButtonText, (profileLoading || msg91Loading || isUpdating) && styles.refreshButtonDisabled]}>
-                        
-                    </Text>
-                </TouchableOpacity>
+                <View style={styles.rightPlaceholder} />
             </View>
-
             <View style={styles.form}>
                 <View style={styles.inputGroup}>
                     <Text style={styles.label}>Name *</Text>
@@ -281,7 +272,7 @@ const EditProfile = () => {
                     )}
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 
@@ -291,51 +282,54 @@ const styles = StyleSheet.create({
         backgroundColor: '#f5f5f5',
     },
     header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 16,
-        paddingVertical: 12,
         backgroundColor: '#fff',
+        paddingTop: Platform.OS === 'ios' ? 44 : 10,
+        paddingBottom: 12,
+        paddingHorizontal: 16,
         borderBottomWidth: 1,
         borderBottomColor: '#e0e0e0',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        ...Platform.select({
+            android: {
+                elevation: 3,
+                height: 56,
+                paddingTop: 10,
+            },
+            ios: {
+                height: 88, // 44 (status bar) + 44 (header)
+            },
+        }),
     },
     backButton: {
-        marginRight: 16,
-        padding: 8,
-        minWidth: 44,
-        minHeight: 44,
+        width: 44,
+        height: 44,
         alignItems: 'center',
         justifyContent: 'center',
+        marginLeft: -8,
     },
     backButtonText: {
-        fontSize: 24,
-        fontWeight: 'bold',
+        fontSize: 28,
         color: '#007AFF',
+        lineHeight: 30,
     },
     title: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#333',
-        flex: 1,
+        fontSize: 17,
+        fontWeight: '600',
+        color: '#000',
+        textAlign: 'center',
+        position: 'absolute',
+        left: 0,
+        right: 0,
     },
-    refreshButton: {
-        marginLeft: 16,
-        padding: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    refreshButtonText: {
-        fontSize: 20,
-        color: '#007AFF',
-    },
-    refreshButtonDisabled: {
-        color: '#ccc',
+    rightPlaceholder: {
+        width: 44,
     },
     form: {
-        padding: 20,
-        backgroundColor: '#fff',
-        margin: 16,
-        borderRadius: 8,
+        flex: 1,
+        padding: 16,
+        backgroundColor: '#f5f5f5',
     },
     inputGroup: {
         marginBottom: 20,

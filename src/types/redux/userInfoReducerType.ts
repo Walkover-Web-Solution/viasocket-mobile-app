@@ -5,10 +5,16 @@ export interface User {
     orgs: { id: string, name: string, company_id: string }[]
 }
 
+export interface Org {
+    id: string;
+    name: string;
+    company_id: string;
+}
+
 export interface $UserInfoReducerType extends User {
     currentOrgId: string
     proxyAuthToken: string
-    currentOrgData: Record<string, unknown>
+    currentOrgData: Org | null
     currentPageId: string
     currentCollectionId: string
     chatbotToken: string

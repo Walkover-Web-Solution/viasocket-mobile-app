@@ -10,6 +10,7 @@ import {
   StatusBar,
   StyleSheet,
   Modal,
+  Image,
 } from 'react-native';
 import { OTPVerification } from '@msg91comm/react-native-sendotp';
 import { useNavigation } from '@react-navigation/native';
@@ -51,9 +52,7 @@ const LoginScreen = () => {
       isSuccess = true;
       token = parsedData.message;
       
-      console.log(' MSG91 OTP Success: JWT token extracted');
-      console.log(' OTP JWT Token:', token);
-      console.log(' OTP JWT Token Length:', token ? token.length : 'null');
+     
     } else {
       console.log(' MSG91 OTP Failed: Invalid response format');
       console.log(' Response Type:', parsedData?.type);
@@ -66,7 +65,7 @@ const LoginScreen = () => {
     });
 
     if (isSuccess && token) {
-      console.log(' JWT Token received successfully - Starting proxy token generation');
+     
       
       setOtpVerified(true);
       setIsLoading(true);
@@ -79,9 +78,7 @@ const LoginScreen = () => {
           AsyncStorage.setItem('referenceId', '870623a1697443499652ceeab330e5'),
         ]);
         
-        console.log(' JWT token saved in AsyncStorage');
-        console.log(' Starting proxy auth token generation...');
-        
+       
         // Generate proxy auth token - email will come from API response
         const { getAuthToken } = require('../api/axios');
         console.log(' Calling getAuthToken API...');
@@ -104,7 +101,7 @@ const LoginScreen = () => {
                   setOtpVerified(false);
                   setIsLoading(false);
                   setModalVisible(false);
-                }
+                }  
               }
             ]
           );
@@ -117,8 +114,7 @@ const LoginScreen = () => {
           currentOrgId: undefined // This will trigger Select Workspace screen
         }));
         
-        console.log(' Proxy auth token saved to Redux');
-        console.log(' Navigating to Select Workspace...');
+       
         
         // Close modal and let AuthNavigator handle the screen transition
         setModalVisible(false);
@@ -181,6 +177,11 @@ const LoginScreen = () => {
             <ActivityIndicator color="#fff" />
           ) : (
             <View style={styles.buttonContent}>
+              <Image
+                source={require('../image/msg91.png')}
+                style={styles.msg91Logo}
+                resizeMode="contain"
+              />
               <Text style={styles.buttonText}>
                 Login With OTP
               </Text>
@@ -225,32 +226,36 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   loginButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
+    backgroundColor: '#ffffff', // Changed from blue to white
+    borderWidth: 1,
+    borderColor: '#000000', // Changed to black border
+    padding: 15,
     borderRadius: 8,
     width: '100%',
+    maxWidth: 300,
     alignItems: 'center',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    flexDirection: 'row',
-    justifyContent: 'center',
+    // Cross-platform shadow
+    
   },
   disabledButton: {
-    backgroundColor: '#cccccc',
+    borderColor: '#9CA3AF',
   },
   buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  msg91Logo: {
+    width: 24,
+    height: 24,
+    marginRight: 12,
+    
   },
   buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 8,
+    color: '#000',
+    fontSize: 18,
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
 });
 
