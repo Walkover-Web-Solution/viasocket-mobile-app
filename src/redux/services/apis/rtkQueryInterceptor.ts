@@ -3,7 +3,6 @@ import axios from 'axios';
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { $ReduxCoreType } from '../../../types/redux/reduxCore';
-import { store } from '../../store';
 import { setUserInfo } from '../../features/userInfo/userInfoSlice';
 
 export const customFetchBaseQuery = (
@@ -32,7 +31,7 @@ export const customFetchBaseQuery = (
         if (result.error && result.error.status === 401) {
             console.log('🔐 401 Unauthorized - Clearing user session');
             // Clear entire user session on 401
-            store.dispatch(setUserInfo({
+            api.dispatch(setUserInfo({
                 proxyAuthToken: '',
                 currentOrgId: '',
                 currentOrgData: {},
