@@ -1,7 +1,7 @@
 // LoginScreen.tsx
 import React from 'react';
 import { View } from 'react-native';
-import { ShowProxyAuth } from '../react-native-proxy/src';
+import { ShowProxyAuth } from '@msg91comm/react-native-36blocks-proxy';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { store } from '../redux/store';
 
