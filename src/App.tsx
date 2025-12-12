@@ -9,7 +9,6 @@ import NavigationWrapper from './navigators/navigationWrapper';
 import { persistor, store } from './redux/store';
 
 const App = () => {
-
   return (
     <SafeAreaProvider>
       <Provider store={store}>

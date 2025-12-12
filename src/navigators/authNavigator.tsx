@@ -19,8 +19,16 @@ const AuthNavigator = () => {
                 <Stack.Screen name="Login" component={LoginScreen} />
             ) : !currentOrgId ? (
                 <>
-                    <Stack.Screen name="Select Workspace" component={AllWorkspace} options={{ headerShown: false }} />
-                    <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }} />
+                    <Stack.Screen 
+                        name="Select Workspace" 
+                        component={AllWorkspace} 
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                        name="EditProfile" 
+                        component={EditProfile} 
+                        options={{ headerShown: true, title: 'Edit Profile' }}
+                    />
                 </>
             ) : null}
         </Stack.Navigator>

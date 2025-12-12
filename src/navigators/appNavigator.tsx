@@ -10,7 +10,13 @@ import FlowPreview from '../screens/flowPreview';
 import FlowsList from '../screens/allFlows';
 import { useGetChatbotTokenMutation } from '../redux/services/apis/chatbotApis';
 
-const Stack = createStackNavigator();
+export type AppStackParamList = {
+    FlowsAndFoldersList: undefined;
+    FlowList: { folderId?: string; folderName?: string };
+    FlowPreview: { flowId: string; flowName?: string };
+};
+
+const Stack = createStackNavigator<AppStackParamList>();
 
 const AppNavigator = () => {
     const [showSearch, setShowSearch] = useState(false);

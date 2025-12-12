@@ -10,6 +10,8 @@ import {
     SafeAreaView,
     AppState,
 } from 'react-native';
+
+const APP_NAME = 'viaSocket Mobile';
 import { useSelector } from 'react-redux';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import { useGetUserProfileQuery, useGetMSG91UserProfileQuery, useUpdateUserMutation } from '../redux/services/apis/userApi';
@@ -121,7 +123,13 @@ const EditProfile = () => {
                 [
                     {
                         text: 'OK',
-                        onPress: () => navigation.goBack()
+                        onPress: () => {
+                            if (navigation.canGoBack()) {
+                                navigation.goBack();
+                            } else {
+                                navigation.navigate('Select Workspace');
+                            }
+                        }
                     }
                 ]
             );
@@ -159,12 +167,85 @@ const EditProfile = () => {
                 'Update Notice', 
                 `Your changes have been saved locally. ${errorMessage}`,
                 [
-                    { text: 'OK', onPress: () => navigation.goBack() }
+                    { 
+                        text: 'OK', 
+                        onPress: () => {
+                            if (navigation.canGoBack()) {
+                                navigation.goBack();
+                            } else {
+                                navigation.navigate('Select Workspace');
+                            }
+                        }
+                    }
                 ]
             );
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const handleDeleteAccount = () => {
+        if (!email) {
+            Alert.alert('Delete account', 'Email not available for this account.');
+            return;
+        }
+
+        Alert.alert(
+            'Delete account',
+            'If you delete your account, your access will be removed after 7 days. In most cases, it is better to keep your account active. Do you still want to continue?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        Alert.alert(
+                            'Are you sure?',
+                            'Are you sure you want to request account deletion? Your account will not be deleted immediately. It will go in a 7-day review period.',
+                            [
+                                {
+                                    text: 'No',
+                                    style: 'cancel',
+                                },
+                                {
+                                    text: 'Yes, send request',
+                                    onPress: async () => {
+                                        try {
+                                            const payload = {
+                                                name: name || '',
+                                                email: email,
+                                                appName: APP_NAME,
+                                            };
+
+                                            await fetch('https://flow.sokt.io/func/scriYblDDLJJ', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                },
+                                                body: JSON.stringify(payload),
+                                            });
+
+                                            Alert.alert(
+                                                'Request sent',
+                                                'Your delete account request has been sent. Your account will not be deleted immediately and will go through a 7-day review period.'
+                                            );
+                                        } catch (error) {
+                                            console.error('❌ Error sending delete account webhook:', error);
+                                            Alert.alert(
+                                                'Error',
+                                                'Could not send delete account request. Please check your connection and try again.'
+                                            );
+                                        }
+                                    },
+                                },
+                            ]
+                        );
+                    },
+                },
+            ]
+        );
     };
 
     // Loading state while fetching profile data
@@ -188,7 +269,13 @@ const EditProfile = () => {
                     <Text style={styles.errorSubText}>Please check your connection and try again</Text>
                     <TouchableOpacity 
                         style={styles.retryButton}
-                        onPress={() => navigation.goBack()}
+                        onPress={() => {
+                            if (navigation.canGoBack()) {
+                                navigation.goBack();
+                            } else {
+                                navigation.navigate('Select Workspace');
+                            }
+                        }}
                     >
                         <Text style={styles.retryButtonText}>Go Back</Text>
                     </TouchableOpacity>
@@ -199,39 +286,6 @@ const EditProfile = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity 
-                    style={styles.backButton}
-                    activeOpacity={0.7}
-                    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-                    onPress={() => {
-                        // Check if we can go back in navigation stack
-                        if (navigation.canGoBack()) {
-                            navigation.goBack();
-                        } else {
-                            navigation.navigate('Select Workspace');
-                        }
-                    }}
-                >
-                    <Text style={styles.backButtonText}>←</Text>
-                </TouchableOpacity>
-                <Text style={styles.title}>Edit Profile</Text>
-                <TouchableOpacity 
-                    style={styles.refreshButton}
-                    activeOpacity={0.7}
-                    hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
-                    onPress={() => {
-                        refetch();
-                        refetchMSG91();
-                    }}
-                    disabled={profileLoading || msg91Loading || isUpdating}
-                >
-                    <Text style={[styles.refreshButtonText, (profileLoading || msg91Loading || isUpdating) && styles.refreshButtonDisabled]}>
-                        
-                    </Text>
-                </TouchableOpacity>
-            </View>
-
             <View style={styles.form}>
                 <View style={styles.inputGroup}>
                     <Text style={styles.label}>Name *</Text>
@@ -247,13 +301,16 @@ const EditProfile = () => {
                 <View style={styles.inputGroup}>
                     <Text style={[styles.label, styles.readOnlyLabel]}>Email </Text>
                     <TextInput
-                        style={[styles.input, styles.readOnlyInput]}
+                        style={[styles.input, styles.readOnlyInput, styles.emailInput]}
                         value={email}
                         placeholder="Email address"
                         keyboardType="email-address"
                         autoCapitalize="none"
                         editable={false}
                         selectTextOnFocus={false}
+                        scrollEnabled={true}
+                        textAlign="left"
+                        textAlignVertical="center"
                     />
                 </View>
 
@@ -279,6 +336,14 @@ const EditProfile = () => {
                     ) : (
                         <Text style={styles.saveButtonText}>Update Profile</Text>
                     )}
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={handleDeleteAccount}
+                    disabled={isLoading || isUpdating}
+                >
+                    <Text style={styles.deleteButtonText}>Delete account</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -365,6 +430,13 @@ const styles = StyleSheet.create({
         borderColor: '#e9ecef',
         color: '#6c757d',
     },
+    emailInput: {
+        textAlign: 'left',
+        paddingLeft: 12,
+        paddingRight: 12,
+        minWidth: '100%',
+        textAlignVertical: 'center',
+    },
     saveButton: {
         backgroundColor: '#007AFF',
         padding: 16,
@@ -379,6 +451,17 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    deleteButton: {
+        marginTop: 12,
+        paddingVertical: 4,
+        alignItems: 'center',
+    },
+    deleteButtonText: {
+        color: '#9CA3AF',
+        fontSize: 12,
+        fontWeight: '400',
+        textDecorationLine: 'underline',
     },
     // Loading state styles
     loadingContainer: {
