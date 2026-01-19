@@ -4,9 +4,9 @@ import React, { useCallback, useLayoutEffect } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAppSelector } from '../hooks/hooks';
 import { useGetFlowsAndFoldersQuery } from '../redux/services/apis/flowApi';
-import { RootStackParamList } from '../types/navigators/navigationTypes';
+import { AppStackParamList } from '../navigators/appNavigator';
 
-type FlowListProps = NativeStackScreenProps<RootStackParamList, 'FlowList'>;
+type FlowListProps = NativeStackScreenProps<AppStackParamList, 'FlowList'>;
 
 function FlowList({ route, navigation }: FlowListProps) {
     const { projectId } = route.params;
@@ -22,10 +22,10 @@ function FlowList({ route, navigation }: FlowListProps) {
     const handleFlowPress = useCallback(
         (flowId: string) => {
             if (flowId) {
-                navigate.navigate('FlowPreview', { flowId });
+                navigation.navigate('FlowPreview', { flowId });
             }
         },
-        [navigate]
+        [navigation]
     );
 
     const renderLoadingIndicator = () => (

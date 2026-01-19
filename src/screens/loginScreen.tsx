@@ -11,15 +11,17 @@ const LoginScreen = () => {
             <ShowProxyAuth config={{}}
                 referenceId='870623a1697443499652ceeab330e5'
                 onLoginSuccess={(data) => {
-                    console.log("✅ Login successful! Proxy auth token generated");
+                    console.log("✅ Login successful! Full response:", JSON.stringify(data, null, 2));
                     
                     const token = data.data?.proxy_auth_token;
                     
                     if (token) {
+                        console.log("🔑 Proxy auth token extracted:", token.substring(0, 20) + '...');
                         store.dispatch(setUserInfo({ proxyAuthToken: token }));
                         console.log("✅ Proxy auth token stored in Redux successfully");
                     } else {
                         console.error("❌ No proxy auth token found in response");
+                        console.error("❌ Response structure:", JSON.stringify(data, null, 2));
                     }
                 }}
                 onLoginFailure={(data) => {

@@ -131,6 +131,28 @@ export const userApi = createApi({
             },
         }),
         
+        // Get Auth Token for Organization
+        getOrgAuthToken: builder.query<any, string>({
+            query: (orgId) => ({
+                url: `/authtoken/org/${orgId}/auth`,
+                method: 'GET',
+            }),
+            transformResponse: (response: any) => {
+                console.log('🔐 ORG AUTH TOKEN API RESPONSE:', JSON.stringify(response, null, 2));
+                console.log('📊 Auth Token:', response?.auth_token ? response.auth_token.substring(0, 30) + '...' : 'N/A');
+                console.log('📊 Token Type:', response?.token_type || 'N/A');
+                console.log('📊 Expires At:', response?.expire_at || 'N/A');
+                console.log('📊 User Ref ID:', response?.user_ref_id || 'N/A');
+                console.log('📊 Company Ref ID:', response?.company_ref_id || 'N/A');
+                console.log('📊 Org ID:', response?.org_id || 'N/A');
+                return response;
+            },
+            transformErrorResponse: (error: any) => {
+                console.error('❌ ORG AUTH TOKEN API ERROR:', JSON.stringify(error, null, 2));
+                return error;
+            },
+        }),
+        
         // Update User Profile API
         updateUser: builder.mutation<any, { name: string; email: string; mobile?: string }>({
             query: (userData) => {
@@ -207,5 +229,7 @@ export const {
     useLogoutMutation, 
     useGetUserProfileQuery,
     useGetMSG91UserProfileQuery,
+    useGetOrgAuthTokenQuery,
+    useLazyGetOrgAuthTokenQuery,
     useUpdateUserMutation
 } = userApi;

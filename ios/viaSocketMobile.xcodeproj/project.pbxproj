@@ -12,7 +12,7 @@
 		71BE4475520019065774A2A1 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		F46D835D074254D5C69A3403 /* libPods-viaSocketMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3458975605BCCB7B16B1BAAF /* libPods-viaSocketMobile.a */; };
+		E0C47F0D7ECDEA34C4EF2068 /* libPods-viaSocketMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B5B58EE02B219307EA7BF4A9 /* libPods-viaSocketMobile.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,14 +20,14 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = viaSocketMobile/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = viaSocketMobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = viaSocketMobile/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		3458975605BCCB7B16B1BAAF /* libPods-viaSocketMobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-viaSocketMobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45B435262DB648B10071925B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		45CF4D222E223E520046C25D /* viaSocketMobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = viaSocketMobile.entitlements; path = viaSocketMobile/viaSocketMobile.entitlements; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = viaSocketMobile/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = viaSocketMobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		9EA516ABA2AF8BBA89273C25 /* Pods-viaSocketMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-viaSocketMobile.debug.xcconfig"; path = "Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile.debug.xcconfig"; sourceTree = "<group>"; };
-		C2FE7654D39E418DFDBF5741 /* Pods-viaSocketMobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-viaSocketMobile.release.xcconfig"; path = "Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile.release.xcconfig"; sourceTree = "<group>"; };
+		89C4CD95C5ACB62F07BD9426 /* Pods-viaSocketMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-viaSocketMobile.debug.xcconfig"; path = "Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile.debug.xcconfig"; sourceTree = "<group>"; };
+		B5B58EE02B219307EA7BF4A9 /* libPods-viaSocketMobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-viaSocketMobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F0B6B2D68FE7FD27DA8B89A8 /* Pods-viaSocketMobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-viaSocketMobile.release.xcconfig"; path = "Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,7 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F46D835D074254D5C69A3403 /* libPods-viaSocketMobile.a in Frameworks */,
+				E0C47F0D7ECDEA34C4EF2068 /* libPods-viaSocketMobile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				3458975605BCCB7B16B1BAAF /* libPods-viaSocketMobile.a */,
+				B5B58EE02B219307EA7BF4A9 /* libPods-viaSocketMobile.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -97,8 +97,8 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9EA516ABA2AF8BBA89273C25 /* Pods-viaSocketMobile.debug.xcconfig */,
-				C2FE7654D39E418DFDBF5741 /* Pods-viaSocketMobile.release.xcconfig */,
+				89C4CD95C5ACB62F07BD9426 /* Pods-viaSocketMobile.debug.xcconfig */,
+				F0B6B2D68FE7FD27DA8B89A8 /* Pods-viaSocketMobile.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -110,13 +110,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "viaSocketMobile" */;
 			buildPhases = (
-				3150C0816E5FC287B642F585 /* [CP] Check Pods Manifest.lock */,
+				E3B13CF499528E4CD7FA4A61 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				B59DF50D76F550B421858783 /* [CP] Embed Pods Frameworks */,
-				657721690E8893345771D0EE /* [CP] Copy Pods Resources */,
+				7A199E20A16E898312C3BFB5 /* [CP] Embed Pods Frameworks */,
+				D618E0F24A59DA8FA48EE3F1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -189,7 +189,41 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		3150C0816E5FC287B642F585 /* [CP] Check Pods Manifest.lock */ = {
+		7A199E20A16E898312C3BFB5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D618E0F24A59DA8FA48EE3F1 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E3B13CF499528E4CD7FA4A61 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -211,40 +245,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		657721690E8893345771D0EE /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B59DF50D76F550B421858783 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-viaSocketMobile/Pods-viaSocketMobile-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -261,12 +261,12 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9EA516ABA2AF8BBA89273C25 /* Pods-viaSocketMobile.debug.xcconfig */;
+			baseConfigurationReference = 89C4CD95C5ACB62F07BD9426 /* Pods-viaSocketMobile.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = viaSocketMobile/viaSocketMobile.entitlements;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = F3U6Z5L2EJ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = viaSocketMobile/Info.plist;
@@ -277,7 +277,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -293,12 +293,12 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C2FE7654D39E418DFDBF5741 /* Pods-viaSocketMobile.release.xcconfig */;
+			baseConfigurationReference = F0B6B2D68FE7FD27DA8B89A8 /* Pods-viaSocketMobile.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = viaSocketMobile/viaSocketMobile.entitlements;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = F3U6Z5L2EJ;
 				INFOPLIST_FILE = viaSocketMobile/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = viaSocket;
@@ -308,7 +308,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

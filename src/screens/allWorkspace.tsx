@@ -160,8 +160,15 @@ export default function AllWorkspace() {
                 keyExtractor={(item) => item.id}
                 refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
                 renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.card} onPress={() => handleOrgSelect(item)}>
+                    <TouchableOpacity 
+                        style={styles.card} 
+                        onPress={() => handleOrgSelect(item)}
+                    >
+                        <View style={styles.orgIconContainer}>
+                            <Text style={styles.orgInitial}>{getInitials(item.name).charAt(0)}</Text>
+                        </View>
                         <Text style={styles.orgName}>{item.name}</Text>
+                        <MaterialIcons name="chevron-right" size={24} color="#94a3b8" style={styles.chevronIcon} />
                     </TouchableOpacity>
                 )}
                 ListEmptyComponent={<Text style={styles.emptyText}>No workspaces found.</Text>}
@@ -176,7 +183,7 @@ export default function AllWorkspace() {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#f9fafb',
     },
     header: {
         flexDirection: 'row',
@@ -184,14 +191,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 16,
         paddingVertical: 12,
-        backgroundColor: '#fff',
-        borderBottomWidth: 1,
-        borderBottomColor: '#e0e0e0',
+        paddingTop: 20,
+        paddingBottom: 12,
+        backgroundColor: '#7c3aed',
+        borderBottomWidth: 0,
     },
     headerTitle: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#ffffff',
     },
     avatarContainer: {
         padding: 4,
@@ -200,12 +208,14 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#333',
+        backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
+        borderWidth: 2,
+        borderColor: 'rgba(255, 255, 255, 0.3)',
     },
     avatarText: {
-        color: '#fff',
+        color: '#7c3aed',
         fontSize: 16,
         fontWeight: 'bold',
     },
@@ -266,6 +276,7 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         paddingHorizontal: 16,
+        paddingTop: 16,
         paddingBottom: 80,
     },
     loadingContainer: {
@@ -277,16 +288,37 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 16,
         marginVertical: 8,
-        borderRadius: 8,
-        shadowColor: '#000',
+        borderRadius: 12,
+        shadowColor: '#7c3aed',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    orgIconContainer: {
+        width: 40,
+        height: 40,
+        borderRadius: 12,
+        backgroundColor: '#eef2ff',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
+    },
+    orgInitial: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#6366f1',
     },
     orgName: {
-        fontSize: 18,
-        color: '#333'
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#1e293b',
+        flex: 1,
+    },
+    chevronIcon: {
+        marginLeft: 8,
     },
     orgId: {
         marginTop: 4,
@@ -295,8 +327,9 @@ const styles = StyleSheet.create({
     },
     emptyText: {
         fontSize: 16,
-        color: '#999',
+        color: '#94a3b8',
         textAlign: 'center',
-        marginTop: 20,
+        marginTop: 40,
+        fontWeight: '500',
     },
 });

@@ -9,18 +9,18 @@ import SearchOverlay from '../components/searchOverlay';
 import FlowPreview from '../screens/flowPreview';
 import FlowsList from '../screens/allFlows';
 import { useGetChatbotTokenMutation } from '../redux/services/apis/chatbotApis';
+import TabNavigator from './tabNavigator';
 
 export type AppStackParamList = {
+    MainTabs: undefined;
     FlowsAndFoldersList: undefined;
-    FlowList: { folderId?: string; folderName?: string };
+    FlowList: { projectId: string };
     FlowPreview: { flowId: string; flowName?: string };
 };
 
 const Stack = createStackNavigator<AppStackParamList>();
 
 const AppNavigator = () => {
-    const [showSearch, setShowSearch] = useState(false);
-
     const { currentOrgId } = useAppSelector((state) => ({
         currentOrgId: state.userInfo.currentOrgId,
     }));
@@ -39,33 +39,26 @@ const AppNavigator = () => {
     return (
         <View style={{ flex: 1 }}>
             <Stack.Navigator>
-                <Stack.Screen name="FlowsAndFoldersList" component={AllFoldersAndFlows} options={{ headerShown: false }} />
-                <Stack.Screen name="FlowList" component={FlowsList} options={{ headerShown: true , headerBackTitle:''}} />
-                <Stack.Screen name="FlowPreview" component={FlowPreview} options={{ headerShown: true ,headerBackTitle:''}} />
+                <Stack.Screen name="MainTabs" component={TabNavigator} options={{ headerShown: false }} />
+                <Stack.Screen name="FlowList" component={FlowsList} options={{ headerShown: true, headerBackTitle: '' }} />
+                <Stack.Screen name="FlowPreview" component={FlowPreview} options={{ headerShown: true, headerBackTitle: '' }} />
             </Stack.Navigator>
 
-            {chatbotToken && <ChatBot
-                embedToken={chatbotToken}
-                threadId={String(currentOrgId)}
-                bridgeName="flowbyai-reactchatbot"
-                variables={{
-                    orgId: currentOrgId,
-                }}
-                openInContainer={false}
-                hideIcon={false}
-                defaultOpen={false}
-                hideCloseButton={false}
-            />}
-
-            <TouchableOpacity
-                style={styles.floatingButton}
-                onPress={() => setShowSearch(true)}
-            >
-                <MaterialIcons name="search" size={22} color="#fff" />
-            </TouchableOpacity>
-
-            {showSearch && (
-                <SearchOverlay onClose={() => setShowSearch(false)} />
+            {chatbotToken && (
+                <View style={styles.chatbotContainer}>
+                    <ChatBot
+                        embedToken={chatbotToken}
+                        threadId={String(currentOrgId)}
+                        bridgeName="flowbyai-reactchatbot"
+                        variables={{
+                            orgId: currentOrgId,
+                        }}
+                        openInContainer={false}
+                        hideIcon={false}
+                        defaultOpen={false}
+                        hideCloseButton={false}
+                    />
+                </View>
             )}
         </View>
     );
@@ -74,17 +67,10 @@ const AppNavigator = () => {
 export default AppNavigator;
 
 const styles = StyleSheet.create({
-    floatingButton: {
+    chatbotContainer: {
         position: 'absolute',
-        bottom: 80,
-        right: 20,
-        backgroundColor: '#007AFF',
-        borderRadius: 30,
-        width: 50,
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        elevation: 5,
-        zIndex: 5,
-    },
+        bottom: 70, // Increased from default position to move it higher
+        right: 0,
+        zIndex: 100,
+    }
 });

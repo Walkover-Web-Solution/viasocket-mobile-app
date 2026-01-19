@@ -6,6 +6,7 @@ import { userApi } from './services/apis/userApi';
 import { FlowApi } from './services/apis/flowApi';
 import { pagesApi } from './services/apis/pagesApi';
 import { chatbotApi } from './services/apis/chatbotApis';
+import { ConnectionsApi } from './services/apis/connectionsApi';
 const persistConfig = {
     key: 'root',
     storage: mmkvStorage,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
     [userApi.reducerPath]: userApi.reducer,
     [FlowApi.reducerPath]: FlowApi.reducer,
     [pagesApi.reducerPath]: pagesApi.reducer,
-    [chatbotApi.reducerPath]: chatbotApi.reducer
+    [chatbotApi.reducerPath]: chatbotApi.reducer,
+    [ConnectionsApi.reducerPath]: ConnectionsApi.reducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

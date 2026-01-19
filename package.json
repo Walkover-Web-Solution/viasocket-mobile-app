@@ -11,11 +11,11 @@
   },
   "dependencies": {
     "@invertase/react-native-apple-authentication": "^2.4.1",
-    "@logrocket/react-native": "^1.59.0",
-    "@msg91comm/react-native-36blocks-proxy": "^1.2.1",
+    "@msg91comm/react-native-36blocks-proxy": "^1.2.3",
     "@msg91comm/react-native-sendotp": "^3.1.0",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-google-signin/google-signin": "^13.3.1",
+    "@react-navigation/bottom-tabs": "^7.8.12",
     "@react-navigation/drawer": "^7.3.9",
     "@react-navigation/native": "^7.1.6",
     "@react-navigation/native-stack": "^7.3.10",

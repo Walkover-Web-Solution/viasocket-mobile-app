@@ -22,10 +22,6 @@ PODS:
   - hermes-engine (0.79.0):
     - hermes-engine/Pre-built (= 0.79.0)
   - hermes-engine/Pre-built (0.79.0)
-  - LogRocket (1.59.0)
-  - logrocket-react-native (1.59.0):
-    - LogRocket (= 1.59.0)
-    - React
   - MMKVCore (2.2.4)
   - NitroMmkv (4.0.0):
     - DoubleConversion
@@ -2187,7 +2183,6 @@ DEPENDENCIES:
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
-  - "logrocket-react-native (from `../node_modules/@logrocket/react-native`)"
   - NitroMmkv (from `../node_modules/react-native-mmkv`)
   - NitroModules (from `../node_modules/react-native-nitro-modules`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
@@ -2274,7 +2269,6 @@ SPEC REPOS:
     - GoogleSignIn
     - GTMAppAuth
     - GTMSessionFetcher
-    - LogRocket
     - MMKVCore
     - OpenSSL-Universal
     - SocketRocket
@@ -2295,8 +2289,6 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2025-03-03-RNv0.79.0-bc17d964d03743424823d7dd1a9f37633459c5c5
-  logrocket-react-native:
-    :path: "../node_modules/@logrocket/react-native"
   NitroMmkv:
     :path: "../node_modules/react-native-mmkv"
   NitroModules:
@@ -2464,8 +2456,6 @@ SPEC CHECKSUMS:
   GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   hermes-engine: cd4bd90f051e3658c83cc00e87c603dfe1b75947
-  LogRocket: c4503e0fc7cb94ff71e8bc8c444b18a25b303bc9
-  logrocket-react-native: 651c31a00683902daefdf890c3579212cb930aa4
   MMKVCore: f2dd4c9befea04277a55e84e7812f930537993df
   NitroMmkv: 3d098399ddcc88ebaabc0cb48b6ff214db579e84
   NitroModules: 8229091083785ae690dc9071f07fc412e0cb8243
