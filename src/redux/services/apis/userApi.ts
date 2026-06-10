@@ -14,7 +14,7 @@ export const userApi = createApi({
             transformResponse: (response: { data: any }) => {
                 // Handle the nested data structure: response.data.data[0]
                 const data = response.data?.data?.[0] || response.data?.[0] || response.data;
-                
+
                 return {
                     name: data?.name || '',
                     id: data?.id || '',
@@ -34,8 +34,15 @@ export const userApi = createApi({
                 try {
                     const { data } = await queryFulfilled;
                     dispatch(setUserInfo(data));
-                } catch (err) {
-                    console.error('Failed to fetch user info:', err);
+                } catch (err: any) {
+                    console.error('❌ Failed to fetch user info:', {
+                        error: err,
+                        status: err?.status,
+                        data: err?.data,
+                        message: err?.message,
+                        isUnhandledError: err?.isUnhandledError,
+                        meta: err?.meta
+                    });
                 }
             }
         }),
@@ -99,7 +106,28 @@ export const userApi = createApi({
                 } catch (err) {
                     console.error('Failed to fetch user profile:', err);
                 }
-            }
+            },
+        }),
+
+        getUserById: builder.query<{ name: string; email: string; id: string }, string>({
+            query: (userId) => `/orgs/user/${userId}`,
+            transformResponse: (response: { data: any }, meta, arg) => {
+                const data = response.data?.[0] || response.data;
+                return {
+                    name: data?.name || '',
+                    email: data?.email || '',
+                    id: data?.id?.toString() || arg,
+                };
+            },
+        }),
+
+        // Get complete user details with c_companies (for connection update payload)
+        getCompleteUserDetails: builder.query<any, void>({
+            query: () => '/orgs/user-org/details',
+            transformResponse: (response: { data: any }) => {
+                const data = response.data?.data?.[0] || response.data?.[0] || response.data;
+                return data; // Return complete user object
+            },
         }),
         
         // Get complete user profile from MSG91 API (includes mobile)
@@ -228,6 +256,10 @@ export const {
     useSwitchOrgMutation, 
     useLogoutMutation, 
     useGetUserProfileQuery,
+    useGetUserByIdQuery,
+    useLazyGetUserByIdQuery,
+    useGetCompleteUserDetailsQuery,
+    useLazyGetCompleteUserDetailsQuery,
     useGetMSG91UserProfileQuery,
     useGetOrgAuthTokenQuery,
     useLazyGetOrgAuthTokenQuery,

@@ -15,6 +15,7 @@ interface FlowStats {
   paused: number;
   errors: number;
   draft: number;
+  trashed: number;
   needsAttention: number;
 }
 
@@ -40,6 +41,7 @@ const HomeScreen = () => {
     paused: 0,
     errors: 0,
     draft: 0,
+    trashed: 0,
     needsAttention: 0,
   });
 
@@ -93,6 +95,11 @@ const HomeScreen = () => {
         String(flow.status).toLowerCase() === 'drafted'
       ).length;
       
+      const trashed = data.flows.filter(flow => 
+        flow.status === 0 || String(flow.status) === '0' || 
+        String(flow.status).toLowerCase() === 'trashed'
+      ).length;
+      
       // Find error flows and log them
       const errorFlows = data.flows.filter(flow => 
         flow.status === -1 || String(flow.status) === '-1' || 
@@ -110,6 +117,7 @@ const HomeScreen = () => {
         active: active || 0, 
         paused: paused || 0, 
         draft: draft || 0,
+        trashed: trashed || 0,
         errors: errors || 0, 
         needsAttention: errors || 0 // Set to actual error count
       });
@@ -151,13 +159,23 @@ const HomeScreen = () => {
           const now = new Date();
           const diffMs = now.getTime() - date.getTime();
           const diffMins = Math.round(diffMs / 60000);
+          const diffDays = Math.floor(diffMins / 1440);
           
           if (diffMins < 60) {
             time = `${diffMins} min ago`;
           } else if (diffMins < 1440) {
             time = `${Math.floor(diffMins / 60)} hours ago`;
+          } else if (diffDays < 7) {
+            time = `${diffDays} days ago`;
+          } else if (diffDays < 30) {
+            const weeks = Math.floor(diffDays / 7);
+            time = weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
+          } else if (diffDays < 365) {
+            const months = Math.floor(diffDays / 30);
+            time = months === 1 ? '1 month ago' : `${months} months ago`;
           } else {
-            time = `${Math.floor(diffMins / 1440)} days ago`;
+            const years = Math.floor(diffDays / 365);
+            time = years === 1 ? '1 year ago' : `${years} years ago`;
           }
         }
         
@@ -260,6 +278,35 @@ const HomeScreen = () => {
           </TouchableOpacity>
         </View>
 
+        <View style={styles.statsRow}>
+          <TouchableOpacity 
+            style={styles.statsCard}
+            onPress={() => navigation.reset({
+              index: 0,
+              routes: [{ name: 'MainTabs', params: { screen: 'Flows', params: { filter: 'trashed' } } }]
+            })}
+          >
+            <Text style={styles.statsLabel}>Trashed</Text>
+            <Text style={styles.statsNumber}>{flowStats.trashed}</Text>
+            <View style={[styles.iconContainer, { backgroundColor: '#fee2e2' }]}>
+              <MaterialIcons name="delete" size={24} color="#dc2626" />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.statsCard}
+            onPress={() => navigation.reset({
+              index: 0,
+              routes: [{ name: 'MainTabs', params: { screen: 'Flows', params: { filter: 'error' } } }]
+            })}
+          >
+            <Text style={styles.statsLabel}>Error</Text>
+            <Text style={styles.statsNumber}>{flowStats.errors}</Text>
+            <View style={[styles.iconContainer, { backgroundColor: '#fecaca' }]}>
+              <MaterialIcons name="error" size={24} color="#ef4444" />
+            </View>
+          </TouchableOpacity>
+        </View>
+
         {/* Recent Activity */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Recent Activity</Text>
@@ -338,8 +385,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
     borderRadius: 12,
-    padding: 16,
-    marginHorizontal: 4,
+    padding: 10,
+    marginHorizontal: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,

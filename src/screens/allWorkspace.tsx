@@ -5,22 +5,30 @@ import { useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { setUserInfo, clearUserInfo } from '../redux/features/userInfo/userInfoSlice';
-import { useGetUserQuery, useSwitchOrgMutation, useLogoutMutation } from '../redux/services/apis/userApi';
+import { useGetUserQuery, useSwitchOrgMutation, useLogoutMutation, userApi } from '../redux/services/apis/userApi';
+import { FlowApi } from '../redux/services/apis/flowApi';
+import { pagesApi } from '../redux/services/apis/pagesApi';
+import { chatbotApi } from '../redux/services/apis/chatbotApis';
+import { ConnectionsApi } from '../redux/services/apis/connectionsApi';
 
 export default function AllWorkspace() {
     const dispatch = useAppDispatch();
     const navigation = useNavigation();
+    const userInfo = useAppSelector((state: any) => state.userInfo);
+    
+    // Only call the query if we have a valid token
+    const shouldFetchUser = userInfo.proxyAuthToken && userInfo.proxyAuthToken.trim() !== '';
+    
     const { data, isLoading, isFetching, refetch } = useGetUserQuery(undefined, {
         pollingInterval: 30000, // Poll every 30 seconds
         refetchOnFocus: true,   // Refetch when window/app gets focus
-        refetchOnReconnect: true // Refetch when network reconnects
+        refetchOnReconnect: true, // Refetch when network reconnects
+        skip: !shouldFetchUser // Skip the query if no token
     });
     const [switchOrg] = useSwitchOrgMutation();
     const [logout] = useLogoutMutation();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     
-    const userInfo = useAppSelector((state: any) => state.userInfo);
-
     const handleOrgSelect = (org: any) => {
         dispatch(setUserInfo({ currentOrgId: org?.id, currentOrgData: org }));
         switchOrg(org?.id);
@@ -59,8 +67,15 @@ export default function AllWorkspace() {
                             // Continue with logout even if API fails
                         }
                         
-                        // Priority 3: Clear Redux state after API call (or if API failed)
+                        // Priority 3: Clear Redux state and all RTK Query caches
+                        console.log('🧹 Clearing all user data and caches...');
                         dispatch(clearUserInfo());
+                        dispatch(userApi.util.resetApiState());
+                        dispatch(FlowApi.util.resetApiState());
+                        dispatch(pagesApi.util.resetApiState());
+                        dispatch(chatbotApi.util.resetApiState());
+                        dispatch(ConnectionsApi.util.resetApiState());
+                        console.log('✅ All data cleared successfully');
                     }
                 }
             ]

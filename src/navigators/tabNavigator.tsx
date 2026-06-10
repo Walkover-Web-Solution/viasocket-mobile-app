@@ -34,6 +34,18 @@ const TabNavigator = () => {
         tabBarActiveTintColor: '#6366f1',
         tabBarInactiveTintColor: 'gray',
         headerShown: true,
+        tabBarLabelStyle: {
+          fontSize: 11,
+          marginBottom: 4,
+        },
+        tabBarStyle: {
+          height: 65,
+          paddingBottom: 8,
+          paddingTop: 8,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 4,
+        },
       })}
     >
       <Tab.Screen 
@@ -49,7 +61,10 @@ const TabNavigator = () => {
       <Tab.Screen 
         name="Connections" 
         component={ConnectionsScreen}
-        options={{ headerShown: false }}
+        options={{ 
+          headerShown: false,
+          tabBarLabel: 'Conn',
+        }}
       />
     </Tab.Navigator>
   );

@@ -18,7 +18,7 @@ import type { AppStackParamList } from '../navigators/appNavigator';
 import { RouteProp } from '@react-navigation/native';
 
 // Flow status types for category filtering
-type FlowStatusCategory = 'all' | 'active' | 'paused' | 'draft';
+type FlowStatusCategory = 'all' | 'active' | 'paused' | 'draft' | 'trashed' | 'error';
 
 // Flow statistics type
 interface FlowStats {
@@ -27,6 +27,7 @@ interface FlowStats {
   paused: number;
   error: number;
   draft: number;
+  trashed: number;
 }
 
 // Flow item interface
@@ -55,7 +56,7 @@ const FlowsTab = ({ route }: { route?: RouteProp<{ params: FlowsTabParams }, 'pa
   const [searchQuery, setSearchQuery] = useState('');
   const [showCategoryMenu, setShowCategoryMenu] = useState(false);
   const [activeCategory, setActiveCategory] = useState<FlowStatusCategory>(initialFilter as FlowStatusCategory);
-  const [flowStats, setFlowStats] = useState<FlowStats>({ all: 0, active: 0, paused: 0, error: 0, draft: 0 });
+  const [flowStats, setFlowStats] = useState<FlowStats>({ all: 0, active: 0, paused: 0, error: 0, draft: 0, trashed: 0 });
   const [filteredFlows, setFilteredFlows] = useState<FlowItem[]>([]);
   const [allFlows, setAllFlows] = useState<FlowItem[]>([]);
 
@@ -95,6 +96,10 @@ const FlowsTab = ({ route }: { route?: RouteProp<{ params: FlowsTabParams }, 'pa
           flow.status === 3 || String(flow.status) === '3' || 
           String(flow.status).toLowerCase() === 'draft' ||
           String(flow.status).toLowerCase() === 'drafted'
+        ).length,
+        trashed: flows.filter(flow => 
+          flow.status === 0 || String(flow.status) === '0' || 
+          String(flow.status).toLowerCase() === 'trashed'
         ).length
       };
       
@@ -129,6 +134,12 @@ const FlowsTab = ({ route }: { route?: RouteProp<{ params: FlowsTabParams }, 'pa
             break;
           case 'draft':
             matches = flow.status === 3 || statusStr === '3' || statusStr === 'draft' || statusStr === 'drafted';
+            break;
+          case 'trashed':
+            matches = flow.status === 0 || statusStr === '0' || statusStr === 'trashed';
+            break;
+          case 'error':
+            matches = flow.status === -1 || statusStr === '-1' || statusStr === 'error' || Number(flow.status) < 0;
             break;
           default:
             matches = true;
@@ -184,6 +195,10 @@ const FlowsTab = ({ route }: { route?: RouteProp<{ params: FlowsTabParams }, 'pa
       label = 'Draft';
       bgColor = '#e2e8f0';
       textColor = '#475569';
+    } else if (status === 0 || statusStr === '0' || statusStr === 'trashed') {
+      label = 'Trashed';
+      bgColor = '#fee2e2';
+      textColor = '#dc2626';
     }
     
     return (
@@ -267,6 +282,26 @@ const FlowsTab = ({ route }: { route?: RouteProp<{ params: FlowsTabParams }, 'pa
             <Text style={styles.countText}>{flowStats.draft}</Text>
           </View>
         </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.categoryItem}
+          onPress={() => handleCategoryPress('trashed')}
+        >
+          <Text style={styles.categoryItemText}>Trashed</Text>
+          <View style={styles.countBadge}>
+            <Text style={styles.countText}>{flowStats.trashed}</Text>
+          </View>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.categoryItem}
+          onPress={() => handleCategoryPress('error')}
+        >
+          <Text style={styles.categoryItemText}>Error</Text>
+          <View style={styles.countBadge}>
+            <Text style={styles.countText}>{flowStats.error}</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -314,7 +349,9 @@ const FlowsTab = ({ route }: { route?: RouteProp<{ params: FlowsTabParams }, 'pa
             {activeCategory === 'all' ? 'All Flows' :
              activeCategory === 'active' ? 'Active' :
              activeCategory === 'paused' ? 'Paused' :
-             'Draft'}
+             activeCategory === 'draft' ? 'Draft' :
+             activeCategory === 'trashed' ? 'Trashed' :
+             'Error'}
           </Text>
         </TouchableOpacity>
       </View>

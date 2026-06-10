@@ -38,7 +38,8 @@ export const customFetchBaseQuery = (
                 name: '',
                 email: '',
                 id: '',
-                orgs: []
+                orgs: [],
+                chatbotToken: ''
             }));
         }
 
