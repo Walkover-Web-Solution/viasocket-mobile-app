@@ -4,9 +4,9 @@ import React, { useCallback, useLayoutEffect } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAppSelector } from '../hooks/hooks';
 import { useGetFlowsAndFoldersQuery } from '../redux/services/apis/flowApi';
-import { RootStackParamList } from '../types/navigators/navigationTypes';
+import { AppStackParamList } from '../navigators/appNavigator';
 
-type FlowListProps = NativeStackScreenProps<RootStackParamList, 'FlowList'>;
+type FlowListProps = NativeStackScreenProps<AppStackParamList, 'FlowList'>;
 
 function FlowList({ route, navigation }: FlowListProps) {
     const { projectId } = route.params;
@@ -18,22 +18,22 @@ function FlowList({ route, navigation }: FlowListProps) {
     useLayoutEffect(() => {
         navigation.setOptions({ title: projectName });
     }, [navigation, projectName]);
-
+                                                              
     const handleFlowPress = useCallback(
         (flowId: string) => {
             if (flowId) {
-                navigate.navigate('FlowPreview', { flowId });
+                navigation.navigate('FlowPreview', { flowId });
             }
         },
-        [navigate]
+        [navigation]
     );
-
+                                                   
     const renderLoadingIndicator = () => (
         <View style={styles.centeredContainer}>
             <Text style={styles.loadingText}>Loading...</Text>
         </View>
     );
-
+                                                                                                                                                                          
     const renderErrorMessage = () => (
         <View style={styles.errorContainer}>
             <Text style={styles.errorText}>
@@ -41,7 +41,7 @@ function FlowList({ route, navigation }: FlowListProps) {
             </Text>
         </View>
     );
-
+                                  
     const renderFlowList = () => (
         <FlatList
             data={projectFlows}
@@ -62,14 +62,14 @@ function FlowList({ route, navigation }: FlowListProps) {
             ListEmptyComponent={<Text style={styles.emptyText}>No flows available.</Text>}
         />
     );
-
+              
     return (
         <View style={{ flex: 1 }}>
             {isLoading ? renderLoadingIndicator() : error ? renderErrorMessage() : renderFlowList()}
         </View>
     );
 }
-
+                                       
 const styles = StyleSheet.create({
     centeredContainer: {
         flex: 1,

@@ -6,6 +6,8 @@ import persistedReducer from './rootReducers';
 import { FlowApi } from './services/apis/flowApi';
 import { pagesApi } from './services/apis/pagesApi';
 import { chatbotApi } from './services/apis/chatbotApis';
+import { ConnectionsApi } from './services/apis/connectionsApi';
+
 export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
@@ -15,7 +17,8 @@ export const store = configureStore({
             userApi.middleware,
             FlowApi.middleware,
             pagesApi.middleware,
-            chatbotApi.middleware
+            chatbotApi.middleware,
+            ConnectionsApi.middleware
         ),
 });
 

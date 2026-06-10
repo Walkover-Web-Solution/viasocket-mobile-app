@@ -3,7 +3,6 @@ import axios from 'axios';
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { $ReduxCoreType } from '../../../types/redux/reduxCore';
-import { store } from '../../store';
 import { setUserInfo } from '../../features/userInfo/userInfoSlice';
 
 export const customFetchBaseQuery = (
@@ -13,8 +12,13 @@ export const customFetchBaseQuery = (
         baseUrl,
         prepareHeaders: (headers, { getState }) => {
             const state = getState() as $ReduxCoreType;
-            const token = state.userInfo.proxyAuthToken
-            headers.set('Proxy_auth_token', token);
+            const token = state.userInfo.proxyAuthToken;
+            
+            // Only set header if token exists and is not empty
+            if (token && token.trim() !== '') {
+                headers.set('Proxy_auth_token', token);
+            }
+            
             return headers;
         },
     });
@@ -25,7 +29,18 @@ export const customFetchBaseQuery = (
             console.log(result.error, "ERROR")
         }
         if (result.error && result.error.status === 401) {
-            store.dispatch(setUserInfo({ proxyAuthToken: null, currentOrgId: null }));
+            console.log('🔐 401 Unauthorized - Clearing user session');
+            // Clear entire user session on 401
+            api.dispatch(setUserInfo({
+                proxyAuthToken: '',
+                currentOrgId: '',
+                currentOrgData: {},
+                name: '',
+                email: '',
+                id: '',
+                orgs: [],
+                chatbotToken: ''
+            }));
         }
 
         return result;

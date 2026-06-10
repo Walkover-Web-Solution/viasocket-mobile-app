@@ -20,33 +20,57 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
-
-	<!-- ✅ Add this section for Google Sign-In -->
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>1019882119040-l16a5um62ureu3jbkqm98e4eqlt41ku5.apps.googleusercontent.com</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.1019882119040-l16a5um62ureu3jbkqm98e4eqlt41ku5</string>
 			</array>
 		</dict>
 	</array>
-
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
-		<false/>
+		<true/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>viasocket.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>msg91.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>We need your location to provide location-based features</string>
+	<key>NSCameraUsageDescription</key>
+	<string>viaSocket needs camera access to take photos and scan documents</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>viaSocket needs access to your photo library to save and upload documents</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>viaSocket needs permission to save photos to your library</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>viaSocket needs microphone access when recording videos</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaterialIcons.ttf</string>

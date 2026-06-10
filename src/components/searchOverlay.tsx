@@ -17,7 +17,7 @@ const SearchOverlay = ({ onClose }: { onClose: () => void }) => {
 
     const navigation = useNavigation();
 
-    const filteredData = data?.flows
+           const filteredData = data?.flows
         .filter((item) =>
             item?.title?.toLowerCase().includes(query?.toLowerCase())
         );

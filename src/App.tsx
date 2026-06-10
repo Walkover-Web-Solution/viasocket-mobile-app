@@ -9,12 +9,11 @@ import NavigationWrapper from './navigators/navigationWrapper';
 import { persistor, store } from './redux/store';
 
 const App = () => {
-
   return (
     <SafeAreaProvider>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <GestureHandlerRootView>
+          <GestureHandlerRootView style={{ flex: 1 }}>
             <PaperProvider>
               <NavigationWrapper />
             </PaperProvider>
